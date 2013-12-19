@@ -1,0 +1,110 @@
+<div class="row-fluid" >
+	<div class="span12" >
+	    <fieldset>
+		    <legend>
+				#i18n{module.mylutece.wssodatabase.manage_profils.tableTitle}</legend>
+				&nbsp;
+			<span class="pull-right"><small><@item_navigation item_navigator=item_navigator /></small></span>
+			  <ul class="nav nav-tabs">
+                <li><a href="jsp/admin/plugins/mylutece/modules/wssodatabase/ModifyProfil.jsp?mylutece_wsso_profil_code=${profil.code}">#i18n{module.mylutece.wssodatabase.manage_profil.modify.ongletTitle}</a></li>
+                <li><a href="jsp/admin/plugins/mylutece/modules/wssodatabase/ManageRolesProfil.jsp?mylutece_wsso_profil_code=${profil.code}">#i18n{module.mylutece.wssodatabase.manage_profil.btnManageRoles}</a></li>
+                <li class="active"><a href="jsp/admin/plugins/mylutece/modules/wssodatabase/ManageUsersProfil.jsp?mylutece_wsso_profil_code=${profil.code}">#i18n{module.mylutece.wssodatabase.manage_profil.btnManageUsers}</a></li>
+            </ul>
+			
+		</fieldset>
+	</div>
+	
+	<div class="span3">
+		<fieldset>
+	    <legend>#i18n{module.mylutece.wssodatabase.manage_users_profil.usersAssigned}</legend>
+		<form class="form" method="post" name="search_users" action="jsp/admin/plugins/mylutece/modules/wssodatabase/ManageUsersProfil.jsp"  >
+			<input type="hidden" name="mylutece_wsso_profil_code" value="${profil.code}" />
+<!-- 			<label for="login" >#i18n{module.mylutece.wssodatabase.manage_users_group.labelLogin} </label> -->
+<!-- 			<input type="text" id="access_code" name="search_login" value="" /> -->
+			<label for="last_name" >#i18n{module.mylutece.wssodatabase.manage_users_profil.labelLastName} </label>
+			<input type="text"  id="last_name" name="search_last_name" value="${search_last_name!}" maxlength="100" tabindex="2" />
+			<label for="first_name">#i18n{module.mylutece.wssodatabase.manage_users_profil.labelFirstName} </label>
+			<input type="text" id="first_name" name="search_first_name" value="${search_first_name!}" maxlength="100" tabindex="3" />
+			<label for="email">#i18n{module.mylutece.wssodatabase.manage_users_profil.labelEmail} </label>
+			<input type="text" id="email" name="search_email" value="${search_email!}" maxlength="100"  tabindex="4" />
+			<button class="btn btn-primary btn-small" type="submit" name="search_is_search" tabindex="5"><i class="icon-search icon-white"></i>&nbsp;#i18n{module.mylutece.wssodatabase.manage_users_profil.btnSearch}</button>
+	   	</form>
+		</fieldset>
+	</div>
+	
+	<div class="span8">
+		<fieldset>
+		<legend>#i18n{module.mylutece.wssodatabase.manage_users_profil.cardManageUsers} : ${profil.code}</legend>
+	    <#if available_users?size &gt; 0 >
+			<form class="form" name="assignUser" method="post" action="jsp/admin/plugins/mylutece/modules/wssodatabase/DoManageUsersProfil.jsp">
+			<input type="hidden" name="mylutece_wsso_profil_code" value="${profil.code}" />
+			<label>#i18n{module.mylutece.wssodatabase.manage_users_profil.usersAvailable}</label>
+			<@comboWithParamsAndLength name="available_users" default_value="" additionalParameters="multiple='multiple' class='span10'" items=available_users max_length=175 />
+			<div class="form-actions">
+				<button class="btn btn-primary btn-small" type="submit" name="save" ><i class="icon-ok icon-white"></i>&nbsp;Assigner</button>
+				<button class="btn btn-small" type="button" onclick="javascript:window.history.back();"><i class="icon-remove-circle"></i>&nbsp;#i18n{portal.admin.message.buttonCancel}</button>
+			</div>
+			</form>
+		<#else>
+	    	<p class="label label-warning">#i18n{module.mylutece.wssodatabase.manage_users_profil.noUsers}</p>
+        </#if>
+		</fieldset>
+		
+	    <#if assigned_users?size &gt; 0 >
+			<form class="form-inline" method="post" action="jsp/admin/plugins/mylutece/modules/wssodatabase/ManageUsersProfil.jsp">
+			<@paginationAdmin paginator=paginator combo=1 form=0 />
+
+			<input type="hidden" name="mylutece_wsso_profil_code" value="${profil.code}" />
+			</form>
+			<table class="table table-striped table-condensed">
+				<tr>
+<!-- 					<th> -->
+<!-- 						Login -->
+<!-- 						<@sort jsp_url="jsp/admin/plugins/mylutece/modules/wssodatabase/ManageUsersProfil.jsp" attribute="login" /> -->
+<!-- 					</th>         -->
+					<th>
+						Nom
+						<@sort jsp_url="jsp/admin/plugins/mylutece/modules/wssodatabase/ManageUsersProfil.jsp" attribute="lastName" />
+					</th>
+					<th>
+						Prénom
+						<@sort jsp_url="jsp/admin/plugins/mylutece/modules/wssodatabase/ManageUsersProfil.jsp" attribute="firstName" />
+					</th> 
+					<th>
+						E-mail
+						<@sort jsp_url="jsp/admin/plugins/mylutece/modules/wssodatabase/ManageUsersProfil.jsp" attribute="email" />
+					</th>
+					<th>#i18n{module.mylutece.wssodatabase.manage_users_profil.colActions}</th>
+				</tr>
+				
+				<#list assigned_users as assigned_user>
+					<#if assigned_user_has_next>
+						<#assign anchor = assigned_user_index>
+					<#else>
+						<#assign anchor = assigned_user_index - 1 >
+					</#if>
+					<tr id="anchor-${assigned_user_index}">
+						<!-- TO FIX: STATUS always 0 -->
+<!-- 						<td>${assigned_user.guid}</td> -->
+						<td>${assigned_user.lastName}</td>
+						<td>${assigned_user.firstName}</td>
+						<td>${assigned_user.email}</td>	                
+						
+						<td>
+<!-- 							<a class="btn btn-primary btn-small" href="jsp/admin/plugins/mylutece/modules/wssodatabase/ManageUsersProfil.jsp?mylutece_database_user_id=${assigned_user.guid}"  title="Modifier" > -->
+<!-- 								<i class="icon-edit icon-white"></i> -->
+<!-- 							</a> -->
+							<a class="btn btn-danger btn-small" href="jsp/admin/plugins/mylutece/modules/wssodatabase/RemoveAssignUserProfil.jsp?assigned_user_id=${assigned_user.myluteceWssoUserId}&mylutece_wsso_profil_code=${profil.code}"  title="#i18n{module.mylutece.wssodatabase.manage_users_profil.btnRemoveAssignment}" >
+								<i class="icon-trash icon-white"></i>
+							</a>																																
+						</td>
+					</tr>            
+				</#list>
+			</table>
+			<@paginationAdmin paginator=paginator />
+	    <#else>
+	    	<p class="label label-warning">#i18n{module.mylutece.wssodatabase.manage_users_profil.noUsersForProfil}</p>
+	    </#if>	  
+	      
+	</div>
+</div>

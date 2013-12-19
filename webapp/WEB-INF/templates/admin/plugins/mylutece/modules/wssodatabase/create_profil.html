@@ -1,0 +1,28 @@
+<div class="row-fluid" >
+	<div class="offset1 span10">
+	<fieldset>
+	<legend>Création d'un profil</legend>
+	<form class="form-horizontal" method="post" name="create_profil" action="jsp/admin/plugins/mylutece/modules/wssodatabase/DoCreateProfil.jsp">
+	
+	<input type="hidden" name="plugin_name" value="${plugin_name}" />
+
+	<div class="control-group">
+	<label class="control-label" for="login">Code * : </label>
+		<div class="controls">
+				<input type="text"  name="code" maxlength="100" size="35" tabindex="1" value="" />
+		</div>
+	</div>
+	<div class="control-group">
+	<label class="control-label" for="description">Description * : </label>
+		<div class="controls">
+			<input type="text" name="description" maxlength="200" size="35" tabindex="2" value="" />
+		</div>
+	</div>
+	<div class="form-actions">
+		<button class="btn btn-primary btn-small" type="submit" ><i class="icon-ok icon-white"></i>&nbsp;Valider</button>
+		<button class="btn btn-primary btn-small" type="button" onclick="javascript:window.history.back();" ><i class="icon-remove-circle icon-white"></i>&nbsp;Annuler</button>
+	</div>
+	</fieldset>
+	</form>
+	</div>
+</div>
