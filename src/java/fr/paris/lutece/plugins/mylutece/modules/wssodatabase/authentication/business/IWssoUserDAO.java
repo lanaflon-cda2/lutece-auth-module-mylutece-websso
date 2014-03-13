@@ -40,7 +40,7 @@ import java.util.List;
 
 
 /**
- *
+ * 
  * @author Etienne
  */
 public interface IWssoUserDAO
@@ -54,7 +54,7 @@ public interface IWssoUserDAO
 
     /**
      * Insert a new record in the table.
-     *
+     * 
      * @param wssoUser The wssoUser object
      * @param plugin The Plugin using this data access service
      */
@@ -62,7 +62,7 @@ public interface IWssoUserDAO
 
     /**
      * Load the data of WssoUser from the table
-     *
+     * 
      * @param nWssoUserId The identifier of WssoUser
      * @param plugin The Plugin using this data access service
      * @return the instance of the WssoUser
@@ -88,7 +88,7 @@ public interface IWssoUserDAO
      * @param plugin The Plugin using this data access service
      * @return The Collection of the WssoUsers
      */
-    Collection selectWssoUserList( Plugin plugin );
+    Collection<WssoUser> selectWssoUserList( Plugin plugin );
 
     /**
      * Load the list of wssoUsers for a role
@@ -100,7 +100,7 @@ public interface IWssoUserDAO
 
     /**
      * Load the list of wssoUser ids for a role
-     *
+     * 
      * @param strIdRole
      *            The role of WssoUser
      * @param plugin
@@ -119,7 +119,7 @@ public interface IWssoUserDAO
 
     /**
      * Load the list of wssoUsers for a last name or first name and profil
-     *
+     * 
      * @param strLastName The guid of WssoUser
      * @param codeProfil The Plugin using this data access service
      * @param strFirstName the first name
@@ -128,11 +128,11 @@ public interface IWssoUserDAO
      * @return The Collection of the WssoUsers
      */
     List<WssoUser> findWssoUserssByLastNameOrFirtNameOrEmailByProfil( String codeProfil, String strLastName,
-        String strFirstName, String strEmail, Plugin plugin );
+            String strFirstName, String strEmail, Plugin plugin );
 
     /**
      * Get the id of the user with this guid
-     *
+     * 
      * @param strGuid the guid
      * @param plugin the current plugin
      * @return the id of the user with this guid

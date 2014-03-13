@@ -36,12 +36,12 @@ package fr.paris.lutece.plugins.mylutece.modules.wssodatabase.authentication.bus
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -51,18 +51,19 @@ import java.util.List;
 public final class WssoUserHome
 {
     // Static variable pointed at the DAO instance
-    private static IWssoUserDAO _dao = (IWssoUserDAO) SpringContextService.getBean( "mylutece-wssodatabase.wssoUserDAO" );
+    private static IWssoUserDAO _dao = (IWssoUserDAO) SpringContextService
+            .getBean( "mylutece-wssodatabase.wssoUserDAO" );
 
     /**
      * Private constructor - this class need not be instantiated
      */
-    private WssoUserHome(  )
+    private WssoUserHome( )
     {
     }
 
     /**
      * Creation of an instance of wssoUser
-     *
+     * 
      * @param wssoUser The instance of the wssoUser which contains the
      *            informations to store
      * @param plugin The current plugin using this method
@@ -78,7 +79,7 @@ public final class WssoUserHome
 
     /**
      * Update of the wssoUser which is specified in parameter
-     *
+     * 
      * @param wssoUser The instance of the wssoUser which contains the data to
      *            store
      * @param plugin The current plugin using this method
@@ -93,7 +94,7 @@ public final class WssoUserHome
 
     /**
      * Remove the WssoUser whose identifier is specified in parameter
-     *
+     * 
      * @param wssoUser The WssoUser object to remove
      * @param plugin The current plugin using this method
      */
@@ -108,7 +109,7 @@ public final class WssoUserHome
     /**
      * Returns an instance of a wssoUser whose identifier is specified in
      * parameter
-     *
+     * 
      * @param nKey The Primary key of the wssoUser
      * @param plugin The current plugin using this method
      * @return An instance of wssoUser
@@ -123,7 +124,7 @@ public final class WssoUserHome
      * @param plugin The current plugin using this method
      * @return A collection of wssoUsers
      */
-    public static Collection findWssoUsersList( Plugin plugin )
+    public static Collection<WssoUser> findWssoUsersList( Plugin plugin )
     {
         return _dao.selectWssoUserList( plugin );
     }
@@ -152,7 +153,7 @@ public final class WssoUserHome
 
     /**
      * Load the list of wssoUsers for a last name or first name and profil
-     *
+     * 
      * @param strLastName The guid of WssoUser
      * @param codeProfil The Plugin using this data access service
      * @param strFirstName the first name
@@ -161,10 +162,10 @@ public final class WssoUserHome
      * @return The Collection of the WssoUsers
      */
     public static List<WssoUser> findWssoUserssByLastNameOrFirtNameOrEmailByProfil( String codeProfil,
-        String strLastName, String strFirstName, String strEmail, Plugin plugin )
+            String strLastName, String strFirstName, String strEmail, Plugin plugin )
     {
         return _dao.findWssoUserssByLastNameOrFirtNameOrEmailByProfil( codeProfil, strLastName, strFirstName, strEmail,
-            plugin );
+                plugin );
     }
 
     /**
@@ -180,7 +181,7 @@ public final class WssoUserHome
 
     /**
      * Returns a collection of wssoUsers ids with a role
-     *
+     * 
      * @param strRole
      *            The role of the wssoUser
      * @param plugin
@@ -201,7 +202,7 @@ public final class WssoUserHome
     public static List<String> findRolesByProfilsForUser( int nWssoUserId, Plugin plugin )
     {
         List<String> listProfils = WssoProfilHome.findWssoProfilsForUser( nWssoUserId, plugin );
-        List<String> listRoles = new ArrayList<String>(  );
+        List<String> listRoles = new ArrayList<String>( );
 
         if ( CollectionUtils.isNotEmpty( listProfils ) )
         {

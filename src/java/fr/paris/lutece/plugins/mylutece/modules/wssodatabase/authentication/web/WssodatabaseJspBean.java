@@ -82,12 +82,8 @@ import fr.paris.lutece.util.string.StringUtil;
 import fr.paris.lutece.util.url.UrlItem;
 import fr.paris.lutece.util.xml.XmlUtil;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.lang.StringUtils;
-
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -97,6 +93,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -121,8 +120,6 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
     /////////////////////////////////////////////////////////////////////////////////////////
     // Constants
     private static final String SPACE = " ";
-    private static final String OPEN_BRACKET = "(";
-    private static final String CLOSED_BRACKET = ")";
     private static final String CONSTANT_EXTENSION_CSV_FILE = ".csv";
     private static final String CONSTANT_EXTENSION_XML_FILE = ".xml";
     private static final String CONSTANT_MIME_TYPE_CSV = "application/csv";
@@ -142,10 +139,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
     private static final String JSP_DO_REMOVE_PROFIL = "jsp/admin/plugins/mylutece/modules/wssodatabase/DoRemoveProfil.jsp";
     private static final String MANAGE_PROFILS = "ManageProfils.jsp";
     private static final String MANAGE_ROLES_PROFIL = "ManageRolesProfil.jsp";
-    private static final String JSP_URL_MODIFY_PROFIL = "jsp/admin/plugins/mylutece/modules/wssodatabase/ModifyProfil.jsp";
-    private static final String JSP_URL_MANAGE_PROFILS = "jsp/admin/plugins/mylutece/modules/wssodatabase/ManageProfils.jsp";
     private static final String JSP_URL_MANAGE_USERS_PROFIL = "jsp/admin/plugins/mylutece/modules/database/ManageUsersProfil.jsp";
-    private static final String MANAGE_USERS_PROFIL = "ManageUsersProfil.jsp";
     private static final String JSP_DO_REMOVE_ASIGN_USER_PROFIL = "jsp/admin/plugins/mylutece/modules/wssodatabase/DoRemoveAssignUserProfil.jsp";
     private static final String MANAGE_PROFILS_USER = "ManageProfilsUser.jsp";
 
@@ -187,7 +181,6 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
     private static final String PARAMETER_MYLUTECE_WSSO_PROFIL_CODE = "mylutece_wsso_profil_code";
     private static final String PARAMETER_CODE = "code";
     private static final String PARAMETER_DESCRIPTION = "description";
-    private static final String PARAMETER_MODIFY_PROFIL = "modify_profil";
     private static final String PARAMETER_MYLUTECE_DATABASE_ROLE_IDS = "mylutece_database_role_id";
     private static final String PARAMETER_AVAILABLE_USERS = "available_users";
     private static final String MARK_AND_PARAMETER_SEARCH_CODE = "search_code";
@@ -255,27 +248,26 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
     private String _strCurrentPageIndex;
     private String _strSortedAttributeName;
     private boolean _bIsAscSort = true;
-    private Map<String, ItemNavigator> _itemNavigators;
     private ItemNavigator _itemNavigator;
-    private WssoDatabaseService _databaseService = WssoDatabaseService.getInstance(  );
-    private ImportWssoDatabaseUserService _importWssoDatabaseUserService = new ImportWssoDatabaseUserService(  );
+    private WssoDatabaseService _databaseService = WssoDatabaseService.getInstance( );
+    private ImportWssoDatabaseUserService _importWssoDatabaseUserService = new ImportWssoDatabaseUserService( );
 
     /**
      * Creates a new WssodatabaseJspBean object.
      */
-    public WssodatabaseJspBean(  )
+    public WssodatabaseJspBean( )
     {
     }
 
     /**
      * Returns the User creation form
-     *
+     * 
      * @param request The Http request
      * @return Html creation form
      */
     public String getCreateUser( HttpServletRequest request )
     {
-        LdapBrowser ldap = new LdapBrowser(  );
+        LdapBrowser ldap = new LdapBrowser( );
         Collection userList = null;
 
         setPageTitleProperty( PROPERTY_PAGE_TITLE_CREATE_USER );
@@ -312,25 +304,25 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             }
             catch ( Exception e )
             {
-                AppLogService.error( e.getMessage(  ), e );
+                AppLogService.error( e.getMessage( ), e );
             }
         }
 
-        HashMap model = new HashMap(  );
+        HashMap model = new HashMap( );
         model.put( MARK_USERS_LIST, userList );
-        model.put( MARK_PLUGIN_NAME, getPlugin(  ).getName(  ) );
+        model.put( MARK_PLUGIN_NAME, getPlugin( ).getName( ) );
         model.put( MARK_LAST_NAME, strUserLastName );
         model.put( MARK_FIRST_NAME, strUserFirstName );
         model.put( MARK_EMAIL, strUserEMail );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_USER, getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_USER, getLocale( ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
      * Returns the Profil creation form
-     *
+     * 
      * @param request The Http request
      * @return Html creation form
      */
@@ -338,17 +330,17 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
     {
         setPageTitleProperty( PROPERTY_PAGE_TITLE_CREATE_PROFIL );
 
-        HashMap<String, Object> model = new HashMap<String, Object>(  );
-        model.put( MARK_PLUGIN_NAME, getPlugin(  ).getName(  ) );
+        HashMap<String, Object> model = new HashMap<String, Object>( );
+        model.put( MARK_PLUGIN_NAME, getPlugin( ).getName( ) );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_PROFIL, getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_PROFIL, getLocale( ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
      * Process user's creation
-     *
+     * 
      * @param request The Http request
      * @return The user's Displaying Url
      */
@@ -356,7 +348,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
     {
         Collection userList = null;
         WssoUser user = null;
-        LdapBrowser ldap = new LdapBrowser(  );
+        LdapBrowser ldap = new LdapBrowser( );
 
         String strUserGuid = request.getParameter( PARAMETER_GUID );
 
@@ -365,9 +357,9 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_CREATE_USER, AdminMessage.TYPE_ERROR );
         }
 
-        userList = WssoUserHome.findWssoUsersListForGuid( strUserGuid, getPlugin(  ) );
+        userList = WssoUserHome.findWssoUsersListForGuid( strUserGuid, getPlugin( ) );
 
-        if ( userList.size(  ) == 0 )
+        if ( userList.size( ) == 0 )
         {
             user = ldap.getUserPublicData( strUserGuid );
 
@@ -376,19 +368,19 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
                 return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_CREATE_USER, AdminMessage.TYPE_ERROR );
             }
 
-            WssoUserHome.create( user, getPlugin(  ) );
+            WssoUserHome.create( user, getPlugin( ) );
         }
         else
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_USER_EXIST, AdminMessage.TYPE_STOP );
         }
 
-        return MANAGE_USERS + "?" + PARAMETER_PLUGIN_NAME + "=" + getPlugin(  ).getName(  );
+        return MANAGE_USERS + "?" + PARAMETER_PLUGIN_NAME + "=" + getPlugin( ).getName( );
     }
 
     /**
      * Process profil's creation
-     *
+     * 
      * @param request The Http request
      * @return The user's Displaying Url
      */
@@ -402,25 +394,25 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
         }
 
-        WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( strCode, getPlugin(  ) );
+        WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( strCode, getPlugin( ) );
 
         if ( wssoProfil != null )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_PROFIL_EXIST, AdminMessage.TYPE_STOP );
         }
 
-        wssoProfil = new WssoProfil(  );
+        wssoProfil = new WssoProfil( );
         wssoProfil.setCode( strCode );
         wssoProfil.setDescription( strDescription );
 
-        WssoProfilHome.create( wssoProfil, getPlugin(  ) );
+        WssoProfilHome.create( wssoProfil, getPlugin( ) );
 
-        return MANAGE_PROFILS + "?" + PARAMETER_PLUGIN_NAME + "=" + getPlugin(  ).getName(  );
+        return MANAGE_PROFILS + "?" + PARAMETER_PLUGIN_NAME + "=" + getPlugin( ).getName( );
     }
 
     /**
      * Process profil's modification
-     *
+     * 
      * @param request The Http request
      * @return The user's Displaying Url
      */
@@ -433,7 +425,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             return getManageProfils( request );
         }
 
-        WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( mlWssoProfilCode, getPlugin(  ) );
+        WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( mlWssoProfilCode, getPlugin( ) );
 
         if ( wssoProfil == null )
         {
@@ -449,14 +441,14 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
 
         wssoProfil.setDescription( strDescription );
 
-        WssoProfilHome.update( wssoProfil, getPlugin(  ) );
+        WssoProfilHome.update( wssoProfil, getPlugin( ) );
 
-        return MANAGE_PROFILS + "?" + PARAMETER_PLUGIN_NAME + "=" + getPlugin(  ).getName(  );
+        return MANAGE_PROFILS + "?" + PARAMETER_PLUGIN_NAME + "=" + getPlugin( ).getName( );
     }
 
     /**
      * Returns removal user's form
-     *
+     * 
      * @param request The Http request
      * @return Html form
      */
@@ -465,16 +457,16 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
         int nUserId = Integer.parseInt( request.getParameter( PARAMETER_MYLUTECE_WSSO_USER_ID ) );
 
         UrlItem url = new UrlItem( JSP_DO_REMOVE_USER );
-        url.addParameter( PARAMETER_PLUGIN_NAME, getPlugin(  ).getName(  ) );
+        url.addParameter( PARAMETER_PLUGIN_NAME, getPlugin( ).getName( ) );
         url.addParameter( PARAMETER_MYLUTECE_WSSO_USER_ID, nUserId );
 
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_USER, url.getUrl(  ),
-            AdminMessage.TYPE_CONFIRMATION );
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_USER, url.getUrl( ),
+                AdminMessage.TYPE_CONFIRMATION );
     }
 
     /**
      * Returns removal profil's form
-     *
+     * 
      * @param request The Http request
      * @return Html form
      */
@@ -488,24 +480,24 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
         }
 
         UrlItem url = new UrlItem( JSP_DO_REMOVE_PROFIL );
-        url.addParameter( PARAMETER_PLUGIN_NAME, getPlugin(  ).getName(  ) );
+        url.addParameter( PARAMETER_PLUGIN_NAME, getPlugin( ).getName( ) );
         url.addParameter( PARAMETER_MYLUTECE_WSSO_PROFIL_CODE, mlWssoProfilCode );
 
-        boolean isAssigned = WssoProfilHome.checkProfilAssigned( mlWssoProfilCode, getPlugin(  ) );
+        boolean isAssigned = WssoProfilHome.checkProfilAssigned( mlWssoProfilCode, getPlugin( ) );
 
         if ( isAssigned )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_REMOVE_ASSIGNED_PROFIL,
-                AdminMessage.TYPE_STOP );
+                    AdminMessage.TYPE_STOP );
         }
 
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_PROFIL, url.getUrl(  ),
-            AdminMessage.TYPE_CONFIRMATION );
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_PROFIL, url.getUrl( ),
+                AdminMessage.TYPE_CONFIRMATION );
     }
 
     /**
      * Process user's removal
-     *
+     * 
      * @param request The Http request
      * @return The Jsp management URL of the process result
      */
@@ -518,22 +510,22 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
 
         int nUserId = Integer.parseInt( request.getParameter( PARAMETER_MYLUTECE_WSSO_USER_ID ) );
 
-        WssoUser user = WssoUserHome.findByPrimaryKey( nUserId, getPlugin(  ) );
+        WssoUser user = WssoUserHome.findByPrimaryKey( nUserId, getPlugin( ) );
 
         if ( user == null )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_REMOVE_USER, AdminMessage.TYPE_ERROR );
         }
 
-        WssoUserHome.remove( user, getPlugin(  ) );
-        WssoUserRoleHome.deleteRolesForUser( user.getMyluteceWssoUserId(  ), getPlugin(  ) );
+        WssoUserHome.remove( user, getPlugin( ) );
+        WssoUserRoleHome.deleteRolesForUser( user.getMyluteceWssoUserId( ), getPlugin( ) );
 
-        return MANAGE_USERS + "?" + PARAMETER_PLUGIN_NAME + "=" + getPlugin(  ).getName(  );
+        return MANAGE_USERS + "?" + PARAMETER_PLUGIN_NAME + "=" + getPlugin( ).getName( );
     }
 
     /**
      * Process profil's removal
-     *
+     * 
      * @param request The Http request
      * @return The Jsp management URL of the process result
      */
@@ -546,21 +538,21 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_REMOVE_PROFIL, AdminMessage.TYPE_STOP );
         }
 
-        WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( mlWssoProfilCode, getPlugin(  ) );
+        WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( mlWssoProfilCode, getPlugin( ) );
 
         if ( wssoProfil == null )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_REMOVE_PROFIL, AdminMessage.TYPE_STOP );
         }
 
-        WssoProfilHome.remove( wssoProfil, getPlugin(  ) );
+        WssoProfilHome.remove( wssoProfil, getPlugin( ) );
 
-        return MANAGE_PROFILS + "?" + PARAMETER_PLUGIN_NAME + "=" + getPlugin(  ).getName(  );
+        return MANAGE_PROFILS + "?" + PARAMETER_PLUGIN_NAME + "=" + getPlugin( ).getName( );
     }
 
     /**
      * Returns users management form
-     *
+     * 
      * @param request The Http request
      * @return Html form
      */
@@ -577,20 +569,20 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             rightRoles = true;
         }
 
-        Collection userList = WssoUserHome.findWssoUsersList( getPlugin(  ) );
-        HashMap model = new HashMap(  );
+        Collection userList = WssoUserHome.findWssoUsersList( getPlugin( ) );
+        HashMap model = new HashMap( );
         model.put( MARK_USERS_LIST, userList );
-        model.put( MARK_PLUGIN_NAME, getPlugin(  ).getName(  ) );
+        model.put( MARK_PLUGIN_NAME, getPlugin( ).getName( ) );
         model.put( MARK_RIGHT_MANAGE_ROLES, rightRoles );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_USERS, getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_USERS, getLocale( ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
      * Returns profils management form
-     *
+     * 
      * @param request The Http request
      * @return Html form
      */
@@ -598,10 +590,10 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
     {
         setPageTitleProperty( PROPERTY_PAGE_TITLE_MANAGE_PROFILS );
 
-        HashMap<String, Object> model = new HashMap<String, Object>(  );
+        HashMap<String, Object> model = new HashMap<String, Object>( );
 
         // Reinit session
-        reinitItemNavigators(  );
+        reinitItemNavigators( );
 
         String strURL = getHomeUrl( request );
         UrlItem url = new UrlItem( strURL );
@@ -612,15 +604,15 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
                 _nDefaultItemsPerPage );
 
         // Get profils
-        List<WssoProfil> profilList = new ArrayList<WssoProfil>(  );
+        List<WssoProfil> profilList = new ArrayList<WssoProfil>( );
 
         String searchCode = request.getParameter( MARK_AND_PARAMETER_SEARCH_CODE );
         String searchDescription = request.getParameter( MARK_AND_PARAMETER_SEARCH_DESCRIPTION );
 
         if ( StringUtils.isNotBlank( searchCode ) && StringUtils.isNotBlank( searchDescription ) )
         {
-            WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCodeAndDescription( searchCode.trim(  ),
-                    searchDescription.trim(  ), getPlugin(  ) );
+            WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCodeAndDescription( searchCode.trim( ),
+                    searchDescription.trim( ), getPlugin( ) );
 
             if ( wssoProfil != null )
             {
@@ -629,7 +621,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
         }
         else if ( StringUtils.isNotBlank( searchCode ) && StringUtils.isBlank( searchDescription ) )
         {
-            WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( searchCode.trim(  ), getPlugin(  ) );
+            WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( searchCode.trim( ), getPlugin( ) );
 
             if ( wssoProfil != null )
             {
@@ -638,13 +630,13 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
         }
         else if ( StringUtils.isBlank( searchCode ) && StringUtils.isNotBlank( searchDescription ) )
         {
-            List<WssoProfil> profilsByDescription = WssoProfilHome.findWssoProfilsByDescription( searchDescription.trim(  ),
-                    getPlugin(  ) );
+            List<WssoProfil> profilsByDescription = WssoProfilHome.findWssoProfilsByDescription(
+                    searchDescription.trim( ), getPlugin( ) );
             profilList.addAll( profilsByDescription );
         }
         else
         {
-            List<WssoProfil> allProfils = WssoProfilHome.findWssoProfilsList( getPlugin(  ) );
+            List<WssoProfil> allProfils = WssoProfilHome.findWssoProfilsList( getPlugin( ) );
             profilList.addAll( allProfils );
         }
 
@@ -673,28 +665,25 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
         }
 
         LocalizedPaginator<WssoProfil> paginator = new LocalizedPaginator<WssoProfil>( profilList, _nItemsPerPage,
-                url.getUrl(  ), Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex, getLocale(  ) );
+                url.getUrl( ), Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex, getLocale( ) );
 
-        //         boolean bPermissionAdvancedParameter = RBACService.isAuthorized( DatabaseResourceIdService.RESOURCE_TYPE,
-        //                 RBAC.WILDCARD_RESOURCES_ID, DatabaseResourceIdService.PERMISSION_MANAGE, getUser(  ) );
         model.put( MARK_PROFILS_LIST, profilList );
-        model.put( MARK_PLUGIN_NAME, getPlugin(  ).getName(  ) );
+        model.put( MARK_PLUGIN_NAME, getPlugin( ).getName( ) );
         model.put( MARK_AND_PARAMETER_SEARCH_CODE, searchCode );
         model.put( MARK_AND_PARAMETER_SEARCH_DESCRIPTION, searchDescription );
         model.put( MARK_NB_ITEMS_PER_PAGE, Integer.toString( _nItemsPerPage ) );
         model.put( MARK_PAGINATOR, paginator );
-        model.put( MARK_PROFILS_LIST, paginator.getPageItems(  ) );
-        model.put( MARK_PLUGIN_NAME, getPlugin(  ).getName(  ) );
+        model.put( MARK_PROFILS_LIST, paginator.getPageItems( ) );
+        model.put( MARK_PLUGIN_NAME, getPlugin( ).getName( ) );
 
-        //         model.put( MARK_PERMISSION_ADVANCED_PARAMETER, bPermissionAdvancedParameter );
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_PROFILS, getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_PROFILS, getLocale( ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
      * Returns the profil modification form
-     *
+     * 
      * @param request The Http request
      * @return Html modification form
      */
@@ -709,7 +698,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             return getManageProfils( request );
         }
 
-        WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( mlWssoProfilCode, getPlugin(  ) );
+        WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( mlWssoProfilCode, getPlugin( ) );
 
         if ( wssoProfil == null )
         {
@@ -717,97 +706,94 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
         }
 
         // ITEM NAVIGATION
-        List<WssoProfil> allProfils = WssoProfilHome.findWssoProfilsList( getPlugin(  ) );
-        setItemNavigator( mlWssoProfilCode,
-            AppPathService.getBaseUrl( request ) + "jsp/admin/plugins/mylutece/modules/wssodatabase/ModifyProfil.jsp",
-            allProfils );
+        List<WssoProfil> allProfils = WssoProfilHome.findWssoProfilsList( getPlugin( ) );
+        setItemNavigator( mlWssoProfilCode, AppPathService.getBaseUrl( request )
+                + "jsp/admin/plugins/mylutece/modules/wssodatabase/ModifyProfil.jsp", allProfils );
 
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<String, Object>( );
 
-        model.put( MARK_PLUGIN_NAME, getPlugin(  ).getName(  ) );
+        model.put( MARK_PLUGIN_NAME, getPlugin( ).getName( ) );
         model.put( MARK_PROFIL, wssoProfil );
-        model.put( MARK_LOCALE, getLocale(  ) );
+        model.put( MARK_LOCALE, getLocale( ) );
         model.put( MARK_ITEM_NAVIGATOR, _itemNavigator );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_PROFIL, getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_PROFIL, getLocale( ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
      * Reinit the item navigator
      */
-    private void reinitItemNavigators(  )
+    private void reinitItemNavigators( )
     {
-        _itemNavigators = new HashMap<String, ItemNavigator>(  );
         _strSortedAttributeName = StringUtils.EMPTY;
         _bIsAscSort = true;
     }
 
     /**
      * Returns roles management form for a specified user
-     *
+     * 
      * @param request The Http request
      * @return Html form
      */
     public String getManageRolesUser( HttpServletRequest request )
     {
-        AdminUser adminUser = getUser(  );
+        AdminUser adminUser = getUser( );
 
         setPageTitleProperty( PROPERTY_PAGE_TITLE_MANAGE_ROLES_USER );
 
         int nUserId = Integer.parseInt( request.getParameter( PARAMETER_MYLUTECE_WSSO_USER_ID ) );
 
-        WssoUser user = WssoUserHome.findByPrimaryKey( nUserId, getPlugin(  ) );
+        WssoUser user = WssoUserHome.findByPrimaryKey( nUserId, getPlugin( ) );
 
-        Collection<Role> allRoleList = RoleHome.findAll(  );
+        Collection<Role> allRoleList = RoleHome.findAll( );
         allRoleList = (ArrayList<Role>) RBACService.getAuthorizedCollection( allRoleList,
                 RoleResourceIdService.PERMISSION_ASSIGN_ROLE, adminUser );
 
-        Collection<String> userRoleList = WssoUserRoleHome.findRolesListForUser( nUserId, getPlugin(  ) );
+        Collection<String> userRoleList = WssoUserRoleHome.findRolesListForUser( nUserId, getPlugin( ) );
 
-        List<WssoUser> allUsers = new ArrayList<WssoUser>(  );
-        allUsers.addAll( WssoUserHome.findWssoUsersList( getPlugin(  ) ) );
-        setItemNavigator( String.valueOf( nUserId ),
-            AppPathService.getBaseUrl( request ) +
-            "jsp/admin/plugins/mylutece/modules/wssodatabase/ManageRolesUser.jsp", allUsers );
+        List<WssoUser> allUsers = new ArrayList<WssoUser>( );
+        allUsers.addAll( WssoUserHome.findWssoUsersList( getPlugin( ) ) );
+        setItemNavigator( String.valueOf( nUserId ), AppPathService.getBaseUrl( request )
+                + "jsp/admin/plugins/mylutece/modules/wssodatabase/ManageRolesUser.jsp", allUsers );
 
-        HashMap model = new HashMap(  );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_ROLES_LIST, allRoleList );
         model.put( MARK_ROLES_LIST_FOR_USER, userRoleList );
         model.put( MARK_USER, user );
-        model.put( MARK_PLUGIN_NAME, getPlugin(  ).getName(  ) );
+        model.put( MARK_PLUGIN_NAME, getPlugin( ).getName( ) );
         model.put( MARK_ITEM_NAVIGATOR, _itemNavigator );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_ROLES_USER, getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_ROLES_USER, getLocale( ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
      * Process assignation roles for a specified user
-     *
+     * 
      * @param request The Http request
      * @return Html form
      */
     public String doAssignRoleUser( HttpServletRequest request )
     {
         int nUserId = Integer.parseInt( request.getParameter( PARAMETER_MYLUTECE_WSSO_USER_ID ) );
-        WssoUser user = WssoUserHome.findByPrimaryKey( nUserId, getPlugin(  ) );
+        WssoUser user = WssoUserHome.findByPrimaryKey( nUserId, getPlugin( ) );
 
         String[] roleArray = request.getParameterValues( PARAMETER_MYLUTECE_WSSO_ROLE_ID );
 
-        WssoUserRoleHome.deleteRolesForUser( user.getMyluteceWssoUserId(  ), getPlugin(  ) );
+        WssoUserRoleHome.deleteRolesForUser( user.getMyluteceWssoUserId( ), getPlugin( ) );
 
         if ( roleArray != null )
         {
             for ( int i = 0; i < roleArray.length; i++ )
             {
-                WssoUserRoleHome.createRoleForUser( nUserId, roleArray[i], getPlugin(  ) );
+                WssoUserRoleHome.createRoleForUser( nUserId, roleArray[i], getPlugin( ) );
             }
         }
 
-        return MANAGE_USERS + "?" + PARAMETER_PLUGIN_NAME + "=" + getPlugin(  ).getName(  );
+        return MANAGE_USERS + "?" + PARAMETER_PLUGIN_NAME + "=" + getPlugin( ).getName( );
     }
 
     /**
@@ -820,7 +806,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
     {
         if ( _itemNavigator == null )
         {
-            List<String> listIds = new ArrayList<String>(  );
+            List<String> listIds = new ArrayList<String>( );
             int nCurrentItemId = 0;
             int nIndex = 0;
             boolean profil = false;
@@ -830,7 +816,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             {
                 if ( element instanceof WssoProfil )
                 {
-                    String code = ( (WssoProfil) element ).getCode(  );
+                    String code = ( (WssoProfil) element ).getCode( );
                     listIds.add( code );
 
                     if ( code.equals( idElement ) )
@@ -843,7 +829,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
                 }
                 else if ( element instanceof WssoUser )
                 {
-                    String idUser = String.valueOf( ( (WssoUser) element ).getMyluteceWssoUserId(  ) );
+                    String idUser = String.valueOf( ( (WssoUser) element ).getMyluteceWssoUserId( ) );
                     listIds.add( idUser );
 
                     if ( idUser.equals( idElement ) )
@@ -878,7 +864,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
 
     /**
      * Returns roles management form for a specified profil
-     *
+     * 
      * @param request The Http request
      * @return Html form
      */
@@ -893,27 +879,23 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             return getManageProfils( request );
         }
 
-        WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( mlWssoProfilCode, getPlugin(  ) );
+        WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( mlWssoProfilCode, getPlugin( ) );
 
         if ( wssoProfil == null )
         {
             return getManageProfils( request );
         }
 
-        Collection<Role> allRoleList = RoleHome.findAll(  );
+        Collection<Role> allRoleList = RoleHome.findAll( );
 
-        //        allRoleList = RBACService.getAuthorizedCollection( allRoleList, RoleResourceIdService.PERMISSION_ASSIGN_ROLE,
-        //                adminUser );
-        //        
-        //        allRoleList = AdminWorkgroupService.getAuthorizedCollection( allRoleList, getUser(  ) );
-        List<String> profilRoleKeyList = IdxWSSODatabaseHome.findRolesFromProfil( wssoProfil.getCode(  ), getPlugin(  ) );
-        Collection<Role> profilRoleList = new ArrayList<Role>(  );
+        List<String> profilRoleKeyList = IdxWSSODatabaseHome.findRolesFromProfil( wssoProfil.getCode( ), getPlugin( ) );
+        Collection<Role> profilRoleList = new ArrayList<Role>( );
 
         for ( String strRoleKey : profilRoleKeyList )
         {
             for ( Role role : allRoleList )
             {
-                if ( role.getRole(  ).equals( strRoleKey ) )
+                if ( role.getRole( ).equals( strRoleKey ) )
                 {
                     profilRoleList.add( RoleHome.findByPrimaryKey( strRoleKey ) );
                 }
@@ -921,21 +903,20 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
         }
 
         // ITEM NAVIGATION
-        List<WssoProfil> allProfils = WssoProfilHome.findWssoProfilsList( getPlugin(  ) );
-        setItemNavigator( mlWssoProfilCode,
-            AppPathService.getBaseUrl( request ) +
-            "jsp/admin/plugins/mylutece/modules/wssodatabase/ManageRolesProfil.jsp", allProfils );
+        List<WssoProfil> allProfils = WssoProfilHome.findWssoProfilsList( getPlugin( ) );
+        setItemNavigator( mlWssoProfilCode, AppPathService.getBaseUrl( request )
+                + "jsp/admin/plugins/mylutece/modules/wssodatabase/ManageRolesProfil.jsp", allProfils );
 
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_ROLES_LIST, allRoleList );
         model.put( MARK_ROLES_LIST_FOR_USER, profilRoleList );
         model.put( MARK_PROFIL, wssoProfil );
-        model.put( MARK_PLUGIN_NAME, getPlugin(  ).getName(  ) );
+        model.put( MARK_PLUGIN_NAME, getPlugin( ).getName( ) );
         model.put( MARK_ITEM_NAVIGATOR, _itemNavigator );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_ROLES_PROFIL, getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_ROLES_PROFIL, getLocale( ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
@@ -952,7 +933,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             return getManageProfils( request );
         }
 
-        WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( mlWssoProfilCode, getPlugin(  ) );
+        WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( mlWssoProfilCode, getPlugin( ) );
 
         if ( wssoProfil == null )
         {
@@ -961,23 +942,23 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
 
         String[] roleArray = request.getParameterValues( PARAMETER_MYLUTECE_DATABASE_ROLE_IDS );
 
-        IdxWSSODatabaseHome.removeRolesForProfil( wssoProfil.getCode(  ), getPlugin(  ) );
+        IdxWSSODatabaseHome.removeRolesForProfil( wssoProfil.getCode( ), getPlugin( ) );
 
         if ( roleArray != null )
         {
             for ( int i = 0; i < roleArray.length; i++ )
             {
-                IdxWSSODatabaseHome.addRoleForProfil( wssoProfil.getCode(  ), roleArray[i], getPlugin(  ) );
+                IdxWSSODatabaseHome.addRoleForProfil( wssoProfil.getCode( ), roleArray[i], getPlugin( ) );
             }
         }
 
-        return MANAGE_ROLES_PROFIL + "?" + PARAMETER_PLUGIN_NAME + "=" + getPlugin(  ).getName(  ) + "&" +
-        PARAMETER_MYLUTECE_WSSO_PROFIL_CODE + "=" + mlWssoProfilCode;
+        return MANAGE_ROLES_PROFIL + "?" + PARAMETER_PLUGIN_NAME + "=" + getPlugin( ).getName( ) + "&"
+                + PARAMETER_MYLUTECE_WSSO_PROFIL_CODE + "=" + mlWssoProfilCode;
     }
 
     /**
      * Returns roles management form for a specified user
-     *
+     * 
      * @param request The Http request
      * @return Html form
      */
@@ -994,48 +975,37 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
 
         int nUserId = Integer.parseInt( strUserId );
 
-        WssoUser wssoUser = WssoUserHome.findByPrimaryKey( nUserId, getPlugin(  ) );
+        WssoUser wssoUser = WssoUserHome.findByPrimaryKey( nUserId, getPlugin( ) );
 
         if ( wssoUser == null )
         {
-            /*
-             * return AdminMessageService.getMessageUrl( request,
-             * Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-             */
             return getManageUsers( request );
         }
 
-        Collection<WssoProfil> allWssoProfilList = WssoProfilHome.findWssoProfilsList( getPlugin(  ) );
+        Collection<WssoProfil> allWssoProfilList = WssoProfilHome.findWssoProfilsList( getPlugin( ) );
 
-        //        allRoleList = RBACService.getAuthorizedCollection( allRoleList, RoleResourceIdService.PERMISSION_ASSIGN_ROLE,
-        //                adminUser );
-        //        
-        //        allRoleList = AdminWorkgroupService.getAuthorizedCollection( allRoleList, getUser(  ) );
-        List<String> profilKeyList = WssoProfilHome.findWssoProfilsForUser( wssoUser.getMyluteceWssoUserId(  ),
-                getPlugin(  ) );
+        List<String> profilKeyList = WssoProfilHome.findWssoProfilsForUser( wssoUser.getMyluteceWssoUserId( ),
+                getPlugin( ) );
 
-        Collection<WssoProfil> profilList = new ArrayList<WssoProfil>(  );
+        Collection<WssoProfil> profilList = new ArrayList<WssoProfil>( );
 
         for ( String strProfilKey : profilKeyList )
         {
             for ( WssoProfil wssoProfil : allWssoProfilList )
             {
-                if ( wssoProfil.getCode(  ).equals( strProfilKey ) )
+                if ( wssoProfil.getCode( ).equals( strProfilKey ) )
                 {
-                    profilList.add( WssoProfilHome.findWssoProfilByCode( strProfilKey, getPlugin(  ) ) );
+                    profilList.add( WssoProfilHome.findWssoProfilByCode( strProfilKey, getPlugin( ) ) );
                 }
             }
         }
 
         // ITEM NAVIGATION
-        //        setItemNavigator( PARAMETER_ASSIGN_ROLE, selectedUser.getUserId(  ),AppPathService.getBaseUrl( request ) + JSP_URL_MANAGE_ROLES_USER, request );
-        List<WssoUser> allUsers = new ArrayList<WssoUser>(  );
-        allUsers.addAll( WssoUserHome.findWssoUsersList( getPlugin(  ) ) );
-        setItemNavigator( strUserId,
-            AppPathService.getBaseUrl( request ) +
-            "jsp/admin/plugins/mylutece/modules/wssodatabase/ManageProfilsUser.jsp", allUsers );
+        List<WssoUser> allUsers = new ArrayList<WssoUser>( );
+        allUsers.addAll( WssoUserHome.findWssoUsersList( getPlugin( ) ) );
+        setItemNavigator( strUserId, AppPathService.getBaseUrl( request )
+                + "jsp/admin/plugins/mylutece/modules/wssodatabase/ManageProfilsUser.jsp", allUsers );
 
-        //        Boolean applicationsExist = Boolean.FALSE;
         AdminUser user = AdminUserService.getAdminUser( request );
 
         boolean rightRoles = false;
@@ -1045,19 +1015,17 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             rightRoles = true;
         }
 
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_PROFILS_LIST, allWssoProfilList );
         model.put( MARK_PROFILS_LIST_FOR_USER, profilList );
         model.put( MARK_USER, wssoUser );
-        model.put( MARK_PLUGIN_NAME, getPlugin(  ).getName(  ) );
-        //        model.put( MARK_EXTERNAL_APPLICATION_EXIST, applicationsExist );
-        //        model.put( MARK_ITEM_NAVIGATOR, _itemNavigators.get( PARAMETER_ASSIGN_ROLE ) );
+        model.put( MARK_PLUGIN_NAME, getPlugin( ).getName( ) );
         model.put( MARK_ITEM_NAVIGATOR, _itemNavigator );
         model.put( MARK_RIGHT_MANAGE_ROLES, rightRoles );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_PROFILS_USER, getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_PROFILS_USER, getLocale( ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
@@ -1076,26 +1044,22 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
 
         int nWssoUserId = Integer.parseInt( strUserId );
 
-        WssoUser wssoUser = WssoUserHome.findByPrimaryKey( nWssoUserId, getPlugin(  ) );
+        WssoUser wssoUser = WssoUserHome.findByPrimaryKey( nWssoUserId, getPlugin( ) );
 
         if ( wssoUser == null )
         {
-            /*
-             * return AdminMessageService.getMessageUrl( request,
-             * Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-             */
             return getManageUsers( request );
         }
 
         String[] profilArray = request.getParameterValues( PARAMETER_MYLUTECE_WSSO_PROFIL_CODE );
 
-        IdxWSSODatabaseHome.removeProfilsForUser( nWssoUserId, getPlugin(  ) );
+        IdxWSSODatabaseHome.removeProfilsForUser( nWssoUserId, getPlugin( ) );
 
         if ( profilArray != null )
         {
             for ( int i = 0; i < profilArray.length; i++ )
             {
-                IdxWSSODatabaseHome.addUserForProfil( nWssoUserId, profilArray[i], getPlugin(  ) );
+                IdxWSSODatabaseHome.addUserForProfil( nWssoUserId, profilArray[i], getPlugin( ) );
             }
         }
 
@@ -1104,7 +1068,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
 
     /**
      * Returns users management form for a specified profil
-     *
+     * 
      * @param request The Http request
      * @return Html form
      */
@@ -1119,14 +1083,14 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             return getManageProfils( request );
         }
 
-        WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( mlWssoProfilCode, getPlugin(  ) );
+        WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( mlWssoProfilCode, getPlugin( ) );
 
         if ( wssoProfil == null )
         {
             return getManageProfils( request );
         }
 
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<String, Object>( );
         String strURL = AppPathService.getBaseUrl( request ) + JSP_URL_MANAGE_USERS_PROFIL;
         UrlItem url = new UrlItem( strURL );
 
@@ -1135,8 +1099,8 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
         String searchEmail = request.getParameter( "search_email" );
 
         // ASSIGNED USERS
-        List<WssoUser> listAllAssignedUsers = WssoUserHome.findWssoUserssByLastNameOrFirtNameOrEmailByProfil( wssoProfil.getCode(  ),
-                searchLastName, searchFirstName, searchEmail, getPlugin(  ) );
+        List<WssoUser> listAllAssignedUsers = WssoUserHome.findWssoUserssByLastNameOrFirtNameOrEmailByProfil(
+                wssoProfil.getCode( ), searchLastName, searchFirstName, searchEmail, getPlugin( ) );
 
         // AVAILABLE USERS
         ReferenceList listAvailableUsers = getAvailableUsers( listAllAssignedUsers );
@@ -1170,28 +1134,27 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
         }
 
         // ITEM NAVIGATION
-        setItemNavigator( mlWssoProfilCode,
-            AppPathService.getBaseUrl( request ) +
-            "jsp/admin/plugins/mylutece/modules/wssodatabase/ManageUsersProfil.jsp", listAllAssignedUsers );
+        setItemNavigator( mlWssoProfilCode, AppPathService.getBaseUrl( request )
+                + "jsp/admin/plugins/mylutece/modules/wssodatabase/ManageUsersProfil.jsp", listAllAssignedUsers );
 
         LocalizedPaginator<WssoUser> paginator = new LocalizedPaginator<WssoUser>( listAllAssignedUsers,
-                _nItemsPerPage, url.getUrl(  ), Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex, getLocale(  ) );
+                _nItemsPerPage, url.getUrl( ), Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex, getLocale( ) );
 
-        model.put( MARK_PLUGIN_NAME, getPlugin(  ).getName(  ) );
+        model.put( MARK_PLUGIN_NAME, getPlugin( ).getName( ) );
         model.put( MARK_PROFIL, wssoProfil );
         model.put( MARK_ITEM_NAVIGATOR, _itemNavigator );
         model.put( MARK_PAGINATOR, paginator );
         model.put( MARK_NB_ITEMS_PER_PAGE, Integer.toString( _nItemsPerPage ) );
         model.put( MARK_AVAILABLE_USERS, listAvailableUsers );
-        model.put( MARK_ASSIGNED_USERS, paginator.getPageItems(  ) );
-        model.put( MARK_ASSIGNED_USERS_NUMBER, listAllAssignedUsers.size(  ) );
+        model.put( MARK_ASSIGNED_USERS, paginator.getPageItems( ) );
+        model.put( MARK_ASSIGNED_USERS_NUMBER, listAllAssignedUsers.size( ) );
         model.put( MARK_AND_PARAMETER_SEARCH_LASTNAME, searchLastName );
         model.put( MARK_AND_PARAMETER_SEARCH_FIRSTNAME, searchFirstName );
         model.put( MARK_AND_PARAMETER_SEARCH_EMAIL, searchEmail );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_USERS_PROFIL, getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_USERS_PROFIL, getLocale( ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
@@ -1201,19 +1164,15 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
      */
     private ReferenceList getAvailableUsers( List<WssoUser> listAssignedUsers )
     {
-        ReferenceList listAvailableUsers = new ReferenceList(  );
+        ReferenceList listAvailableUsers = new ReferenceList( );
 
-        for ( WssoUser user : (Collection<WssoUser>) WssoUserHome.findWssoUsersList( getPlugin(  ) ) )
+        for ( WssoUser user : (Collection<WssoUser>) WssoUserHome.findWssoUsersList( getPlugin( ) ) )
         {
             boolean bIsAvailable = Boolean.TRUE;
 
             for ( WssoUser assignedUser : listAssignedUsers )
             {
-                if (  /*
-                * !_databaseService.isAuthorized( user, getUser( ),
-                * getPlugin( ) ) ||
-                */
-                    ( user.getMyluteceWssoUserId(  ) == assignedUser.getMyluteceWssoUserId(  ) ) )
+                if ( user.getMyluteceWssoUserId( ) == assignedUser.getMyluteceWssoUserId( ) )
                 {
                     bIsAvailable = Boolean.FALSE;
 
@@ -1223,9 +1182,9 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
 
             if ( bIsAvailable )
             {
-                ReferenceItem userItem = new ReferenceItem(  );
-                userItem.setCode( String.valueOf( user.getMyluteceWssoUserId(  ) ) );
-                userItem.setName( user.getLastName(  ) + SPACE + user.getFirstName(  ) );
+                ReferenceItem userItem = new ReferenceItem( );
+                userItem.setCode( String.valueOf( user.getMyluteceWssoUserId( ) ) );
+                userItem.setName( user.getLastName( ) + SPACE + user.getFirstName( ) );
                 listAvailableUsers.add( userItem );
             }
         }
@@ -1246,21 +1205,13 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
 
         if ( mlWssoProfilCode == null )
         {
-            /*
-             * return AdminMessageService.getMessageUrl( request,
-             * Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-             */
             return getManageProfils( request );
         }
 
-        WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( mlWssoProfilCode, getPlugin(  ) );
+        WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( mlWssoProfilCode, getPlugin( ) );
 
         if ( wssoProfil == null )
         {
-            /*
-             * return AdminMessageService.getMessageUrl( request,
-             * Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
-             */
             return getManageProfils( request );
         }
 
@@ -1272,27 +1223,22 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             for ( int i = 0; i < arrayUsersIds.length; i++ )
             {
                 int nUserId = Integer.parseInt( arrayUsersIds[i] );
-                WssoUser user = WssoUserHome.findByPrimaryKey( nUserId, getPlugin(  ) );
+                WssoUser user = WssoUserHome.findByPrimaryKey( nUserId, getPlugin( ) );
 
                 if ( user != null )
                 {
-                    IdxWSSODatabaseHome.addUserForProfil( nUserId, wssoProfil.getCode(  ), getPlugin(  ) );
+                    IdxWSSODatabaseHome.addUserForProfil( nUserId, wssoProfil.getCode( ), getPlugin( ) );
                 }
 
-                //                    GroupForUser( user.getUserId(  ), selectedGroup.getGroupKey(  ), getPlugin(  ) );
             }
         }
 
-        //            strReturn = JSP_MANAGE_USERS_GROUP + QUESTION_MARK + PARAMETER_GROUP_KEY + EQUAL +
-        //                selectedGroup.getGroupKey(  );
         return getManageUsersProfil( request );
-
-        //            return MANAGE_USERS_PROFIL + "?" + PARAMETER_PLUGIN_NAME + "=" + _plugin.getName(  ) + "?" + PARAMETER_MYLUTECE_WSSO_PROFIL_CODE + "=" + mlWssoProfilCode;
     }
 
     /**
      * Returns removal user's form
-     *
+     * 
      * @param request The Http request
      * @return Html form
      */
@@ -1313,17 +1259,17 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
         }
 
         UrlItem url = new UrlItem( JSP_DO_REMOVE_ASIGN_USER_PROFIL );
-        url.addParameter( PARAMETER_PLUGIN_NAME, getPlugin(  ).getName(  ) );
+        url.addParameter( PARAMETER_PLUGIN_NAME, getPlugin( ).getName( ) );
         url.addParameter( PARAMETER_MYLUTECE_WSSO_PROFIL_CODE, mlWssoProfilCode );
         url.addParameter( MARK_AND_PARAMETER_ASSIGNED_USER_ID, assignedUseId );
 
-        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_ASSIGN_PROFIL_USER, url.getUrl(  ),
-            AdminMessage.TYPE_CONFIRMATION );
+        return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_REMOVE_ASSIGN_PROFIL_USER, url.getUrl( ),
+                AdminMessage.TYPE_CONFIRMATION );
     }
 
     /**
      * Process user's removal
-     *
+     * 
      * @param request The Http request
      * @return The Jsp management URL of the process result
      */
@@ -1336,7 +1282,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_REMOVE_PROFIL, AdminMessage.TYPE_STOP );
         }
 
-        WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( mlWssoProfilCode, getPlugin(  ) );
+        WssoProfil wssoProfil = WssoProfilHome.findWssoProfilByCode( mlWssoProfilCode, getPlugin( ) );
 
         if ( wssoProfil == null )
         {
@@ -1350,15 +1296,15 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_REMOVE_PROFIL, AdminMessage.TYPE_STOP );
         }
 
-        WssoUser assignedUser = WssoUserHome.findByPrimaryKey( Integer.valueOf( assignedUseId ), getPlugin(  ) );
+        WssoUser assignedUser = WssoUserHome.findByPrimaryKey( Integer.valueOf( assignedUseId ), getPlugin( ) );
 
         if ( assignedUser == null )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_REMOVE_PROFIL, AdminMessage.TYPE_STOP );
         }
 
-        IdxWSSODatabaseHome.removeUserForProfil( assignedUser.getMyluteceWssoUserId(  ), wssoProfil.getCode(  ),
-            getPlugin(  ) );
+        IdxWSSODatabaseHome.removeUserForProfil( assignedUser.getMyluteceWssoUserId( ), wssoProfil.getCode( ),
+                getPlugin( ) );
 
         return getManageUsersProfil( request );
     }
@@ -1370,22 +1316,18 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
      */
     public String getExportUsers( HttpServletRequest request )
     {
-        //        if ( !RBACService.isAuthorized( RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID, PERMISSION_IMPORT_EXPORT_WSSO_DATABASE_USERS, getUser( ) ) )
-        //        {
-        //            return getManageUsers( request );
-        //        }
         setPageTitleProperty( PROPERTY_PAGE_TITLE_MANAGE_USERS );
 
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<String, Object>( );
 
-        ReferenceList refListXsl = XslExportHome.getRefListByPlugin( getPlugin(  ) );
+        ReferenceList refListXsl = XslExportHome.getRefListByPlugin( getPlugin( ) );
 
         model.put( MARK_LIST_XSL_EXPORT, refListXsl );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_EXPORT_USERS_FROM_FILE,
                 AdminUserService.getLocale( request ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
@@ -1397,17 +1339,12 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
      * @throws IOException If an IOException occurs
      */
     public DefaultPluginActionResult doExportUsers( HttpServletRequest request, HttpServletResponse response )
-        throws IOException
+            throws IOException
     {
-        Plugin plugin = getPlugin(  );
+        Plugin plugin = getPlugin( );
 
-        DefaultPluginActionResult result = new DefaultPluginActionResult(  );
+        DefaultPluginActionResult result = new DefaultPluginActionResult( );
 
-        //        if ( !RBACService.isAuthorized( RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID, PERMISSION_IMPORT_EXPORT_WSSO_DATABASE_USERS, getUser( ) ) )
-        //        {
-        //            result.setHtmlContent( getManageUsers( request ) );
-        //            return result;
-        //        }
         String strXslExportId = request.getParameter( PARAMETER_XSL_EXPORT_ID );
         String strExportProfils = request.getParameter( PARAMETER_EXPORT_PROFILS );
         String strExportRoles = request.getParameter( PARAMETER_EXPORT_ROLES );
@@ -1418,7 +1355,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
 
         if ( StringUtils.isBlank( strXslExportId ) )
         {
-            Object[] tabRequiredFields = { I18nService.getLocalizedString( FIELD_XSL_EXPORT, getLocale(  ) ) };
+            Object[] tabRequiredFields = { I18nService.getLocalizedString( FIELD_XSL_EXPORT, getLocale( ) ) };
             result.setRedirect( AdminMessageService.getMessageUrl( request, MESSAGE_MANDATORY_FIELD, tabRequiredFields,
                     AdminMessage.TYPE_STOP ) );
 
@@ -1431,32 +1368,28 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
 
         Collection<WssoUser> listUsers = WssoUserHome.findWssoUsersList( plugin );
 
-        StringBuffer sbXml = new StringBuffer( XmlUtil.getXmlHeader(  ) );
+        StringBuffer sbXml = new StringBuffer( XmlUtil.getXmlHeader( ) );
         XmlUtil.beginElement( sbXml, CONSTANT_XML_USERS );
 
-        List<IAttribute> listAttributes = AttributeHome.findAll( getLocale(  ),
+        List<IAttribute> listAttributes = AttributeHome.findAll( getLocale( ),
                 PluginService.getPlugin( MyLutecePlugin.PLUGIN_NAME ) );
 
         for ( WssoUser user : listUsers )
         {
-            //            if ( !( user.getStatus( ) == DatabaseUser.STATUS_ANONYMIZED ) )
-            //            {
             sbXml.append( _databaseService.getXmlFromUser( user, bExportRoles, bExportGroups, bExportProfils,
-                    listAttributes, getLocale(  ) ) );
-
-            //            }
+                    listAttributes, getLocale( ) ) );
         }
 
         XmlUtil.endElement( sbXml, CONSTANT_XML_USERS );
 
-        String strXml = StringUtil.replaceAccent( sbXml.toString(  ) );
+        String strXml = StringUtil.replaceAccent( sbXml.toString( ) );
         String strExportedUsers = XslExportService.exportXMLWithXSL( nIdXslExport, strXml );
 
-        if ( CONSTANT_MIME_TYPE_CSV.contains( xslExport.getExtension(  ) ) )
+        if ( CONSTANT_MIME_TYPE_CSV.contains( xslExport.getExtension( ) ) )
         {
             response.setContentType( CONSTANT_MIME_TYPE_CSV );
         }
-        else if ( CONSTANT_EXTENSION_XML_FILE.contains( xslExport.getExtension(  ) ) )
+        else if ( CONSTANT_EXTENSION_XML_FILE.contains( xslExport.getExtension( ) ) )
         {
             response.setContentType( CONSTANT_MIME_TYPE_XML );
         }
@@ -1465,14 +1398,14 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             response.setContentType( CONSTANT_MIME_TYPE_OCTETSTREAM );
         }
 
-        String strFileName = CONSTANT_EXPORT_USERS_FILE_NAME + CONSTANT_POINT + xslExport.getExtension(  );
-        response.setHeader( CONSTANT_ATTACHEMENT_DISPOSITION,
-            CONSTANT_ATTACHEMENT_FILE_NAME + strFileName + CONSTANT_QUOTE );
+        String strFileName = CONSTANT_EXPORT_USERS_FILE_NAME + CONSTANT_POINT + xslExport.getExtension( );
+        response.setHeader( CONSTANT_ATTACHEMENT_DISPOSITION, CONSTANT_ATTACHEMENT_FILE_NAME + strFileName
+                + CONSTANT_QUOTE );
 
-        PrintWriter out = response.getWriter(  );
+        PrintWriter out = response.getWriter( );
         out.write( strExportedUsers );
-        out.flush(  );
-        out.close(  );
+        out.flush( );
+        out.close( );
 
         return null;
     }
@@ -1484,20 +1417,15 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
      */
     public String getImportUsersFromFile( HttpServletRequest request )
     {
-        //        if ( !RBACService.isAuthorized( RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID,
-        //                PERMISSION_IMPORT_EXPORT_WSSO_DATABASE_USERS, getUser( ) ) )
-        //        {
-        //            return getManageUsers( request );
-        //        }
         setPageTitleProperty( PROPERTY_IMPORT_USERS_FROM_FILE_PAGETITLE );
 
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<String, Object>( );
 
         model.put( MARK_LIST_MESSAGES, request.getAttribute( ATTRIBUTE_IMPORT_USERS_LIST_MESSAGES ) );
 
-        String strCsvSeparator = StringUtils.EMPTY + _importWssoDatabaseUserService.getCSVSeparator(  );
-        String strCsvEscapeCharacter = StringUtils.EMPTY + _importWssoDatabaseUserService.getCSVEscapeCharacter(  );
-        String strAttributesSeparator = StringUtils.EMPTY + _importWssoDatabaseUserService.getAttributesSeparator(  );
+        String strCsvSeparator = StringUtils.EMPTY + _importWssoDatabaseUserService.getCSVSeparator( );
+        String strCsvEscapeCharacter = StringUtils.EMPTY + _importWssoDatabaseUserService.getCSVEscapeCharacter( );
+        String strAttributesSeparator = StringUtils.EMPTY + _importWssoDatabaseUserService.getAttributesSeparator( );
         model.put( MARK_CSV_SEPARATOR, strCsvSeparator );
         model.put( MARK_CSV_ESCAPE, strCsvEscapeCharacter );
         model.put( MARK_ATTRIBUTES_SEPARATOR, strAttributesSeparator );
@@ -1505,7 +1433,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_IMPORT_USERS_FROM_FILE,
                 AdminUserService.getLocale( request ), model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
 
     /**
@@ -1516,33 +1444,27 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
      */
     public DefaultPluginActionResult doImportUsersFromFile( HttpServletRequest request )
     {
-        DefaultPluginActionResult result = new DefaultPluginActionResult(  );
+        DefaultPluginActionResult result = new DefaultPluginActionResult( );
 
-        //        if ( !RBACService.isAuthorized( RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID,
-        //                PERMISSION_IMPORT_EXPORT_WSSO_DATABASE_USERS, getUser( ) ) )
-        //        {
-        //            result.setHtmlContent( getManageUsers( request ) );
-        //            return result;
-        //        }
         if ( request instanceof MultipartHttpServletRequest )
         {
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
             FileItem fileItem = multipartRequest.getFile( PARAMETER_IMPORT_USERS_FILE );
             String strMimeType = FileSystemUtil.getMIMEType( FileUploadService.getFileNameOnly( fileItem ) );
 
-            if ( !( ( fileItem != null ) && !StringUtils.EMPTY.equals( fileItem.getName(  ) ) ) )
+            if ( !( ( fileItem != null ) && !StringUtils.EMPTY.equals( fileItem.getName( ) ) ) )
             {
-                Object[] tabRequiredFields = { I18nService.getLocalizedString( FIELD_IMPORT_USERS_FILE, getLocale(  ) ) };
+                Object[] tabRequiredFields = { I18nService.getLocalizedString( FIELD_IMPORT_USERS_FILE, getLocale( ) ) };
                 result.setRedirect( AdminMessageService.getMessageUrl( request, MESSAGE_MANDATORY_FIELD,
                         tabRequiredFields, AdminMessage.TYPE_STOP ) );
 
                 return result;
             }
 
-            if ( ( !strMimeType.equals( CONSTANT_MIME_TYPE_CSV ) &&
-                    !strMimeType.equals( CONSTANT_MIME_TYPE_OCTETSTREAM ) &&
-                    !strMimeType.equals( CONSTANT_MIME_TYPE_TEXT_CSV ) ) ||
-                    !fileItem.getName(  ).toLowerCase(  ).endsWith( CONSTANT_EXTENSION_CSV_FILE ) )
+            if ( ( !strMimeType.equals( CONSTANT_MIME_TYPE_CSV )
+                    && !strMimeType.equals( CONSTANT_MIME_TYPE_OCTETSTREAM ) && !strMimeType
+                        .equals( CONSTANT_MIME_TYPE_TEXT_CSV ) )
+                    || !fileItem.getName( ).toLowerCase( ).endsWith( CONSTANT_EXTENSION_CSV_FILE ) )
             {
                 result.setRedirect( AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_CSV_FILE_IMPORT,
                         AdminMessage.TYPE_STOP ) );
@@ -1566,7 +1488,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
         }
         else
         {
-            Object[] tabRequiredFields = { I18nService.getLocalizedString( FIELD_IMPORT_USERS_FILE, getLocale(  ) ) };
+            Object[] tabRequiredFields = { I18nService.getLocalizedString( FIELD_IMPORT_USERS_FILE, getLocale( ) ) };
             result.setRedirect( AdminMessageService.getMessageUrl( request, MESSAGE_MANDATORY_FIELD, tabRequiredFields,
                     AdminMessage.TYPE_STOP ) );
         }
