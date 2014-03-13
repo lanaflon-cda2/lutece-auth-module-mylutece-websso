@@ -54,9 +54,6 @@ import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.html.HtmlTemplate;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -64,6 +61,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -94,7 +94,6 @@ public class ImportWssoDatabaseUserService extends CSVReaderService
     private static final String MARK_SITE_LINK = "site_link";
     private static final String CONSTANT_DEFAULT_IMPORT_EXPORT_USER_SEPARATOR = ":";
     private static final String CONSTANT_ROLE = "role";
-    private static final String CONSTANT_GROUP = "group";
     private static final int CONSTANT_MINIMUM_COLUMNS_PER_LINE = 4;
 
     /**
@@ -109,10 +108,10 @@ public class ImportWssoDatabaseUserService extends CSVReaderService
      */
     @Override
     protected List<CSVMessageDescriptor> readLineOfCSVFile( String[] strLineDataArray, int nLineNumber, Locale locale,
-        String strBaseUrl )
+            String strBaseUrl )
     {
         Plugin databasePlugin = PluginService.getPlugin( WssoDatabasePlugin.PLUGIN_NAME );
-        List<CSVMessageDescriptor> listMessages = new ArrayList<CSVMessageDescriptor>(  );
+        List<CSVMessageDescriptor> listMessages = new ArrayList<CSVMessageDescriptor>( );
         int nIndex = 0;
 
         String strGuid = strLineDataArray[nIndex++];
@@ -166,7 +165,7 @@ public class ImportWssoDatabaseUserService extends CSVReaderService
             return listMessages;
         }
 
-        boolean bUpdateUser = getUpdateExistingUsers(  );
+        boolean bUpdateUser = getUpdateExistingUsers( );
         int nUserId = 0;
 
         if ( bUpdateUser )
@@ -181,7 +180,7 @@ public class ImportWssoDatabaseUserService extends CSVReaderService
             bUpdateUser = nUserId > 0;
         }
 
-        WssoUser wssoUser = new WssoUser(  );
+        WssoUser wssoUser = new WssoUser( );
 
         wssoUser.setGuid( strGuid );
         wssoUser.setLastName( strLastName );
@@ -202,24 +201,24 @@ public class ImportWssoDatabaseUserService extends CSVReaderService
         }
 
         // We remove old roles, groups and attributes of the user
-        WssoUserRoleHome.deleteRolesForUser( wssoUser.getMyluteceWssoUserId(  ), databasePlugin );
+        WssoUserRoleHome.deleteRolesForUser( wssoUser.getMyluteceWssoUserId( ), databasePlugin );
         //        DatabaseHome.removeGroupsForUser( user.getUserId( ), databasePlugin );
-        IdxWSSODatabaseHome.removeProfilsForUser( wssoUser.getMyluteceWssoUserId(  ), databasePlugin );
-        MyLuteceUserFieldService.doRemoveUserFields( wssoUser.getMyluteceWssoUserId(  ), locale );
+        IdxWSSODatabaseHome.removeProfilsForUser( wssoUser.getMyluteceWssoUserId( ), databasePlugin );
+        MyLuteceUserFieldService.doRemoveUserFields( wssoUser.getMyluteceWssoUserId( ), locale );
 
         // We get every attributes, roles and groups of the user
-        List<String> listRoles = new ArrayList<String>(  );
+        List<String> listRoles = new ArrayList<String>( );
 
         //        List<String> listGroups = new ArrayList<String>( );
-        List<String> listProfils = new ArrayList<String>(  );
+        List<String> listProfils = new ArrayList<String>( );
 
         while ( nIndex < strLineDataArray.length )
         {
             String strValue = strLineDataArray[nIndex];
 
-            if ( StringUtils.isNotBlank( strValue ) && ( strValue.indexOf( getAttributesSeparator(  ) ) > 0 ) )
+            if ( StringUtils.isNotBlank( strValue ) && ( strValue.indexOf( getAttributesSeparator( ) ) > 0 ) )
             {
-                int nSeparatorIndex = strValue.indexOf( getAttributesSeparator(  ) );
+                int nSeparatorIndex = strValue.indexOf( getAttributesSeparator( ) );
                 String strLineId = strValue.substring( 0, nSeparatorIndex );
 
                 if ( StringUtils.isNotBlank( strLineId ) )
@@ -232,7 +231,8 @@ public class ImportWssoDatabaseUserService extends CSVReaderService
                         if ( role == null )
                         {
                             Object[] args = { strRole };
-                            String strErrorMessage = I18nService.getLocalizedString( MESSAGE_ROLE_UNKNOWN, args, locale );
+                            String strErrorMessage = I18nService
+                                    .getLocalizedString( MESSAGE_ROLE_UNKNOWN, args, locale );
                             CSVMessageDescriptor error = new CSVMessageDescriptor( CSVMessageLevel.ERROR, nLineNumber,
                                     strErrorMessage );
                             listMessages.add( error );
@@ -287,7 +287,7 @@ public class ImportWssoDatabaseUserService extends CSVReaderService
         {
             for ( String strRole : listRoles )
             {
-                WssoUserRoleHome.createRoleForUser( wssoUser.getMyluteceWssoUserId(  ), strRole, databasePlugin );
+                WssoUserRoleHome.createRoleForUser( wssoUser.getMyluteceWssoUserId( ), strRole, databasePlugin );
             }
         }
 
@@ -300,7 +300,7 @@ public class ImportWssoDatabaseUserService extends CSVReaderService
         {
             for ( String profil : listProfils )
             {
-                IdxWSSODatabaseHome.addUserForProfil( wssoUser.getMyluteceWssoUserId(  ), profil, databasePlugin );
+                IdxWSSODatabaseHome.addUserForProfil( wssoUser.getMyluteceWssoUserId( ), profil, databasePlugin );
             }
         }
 
@@ -315,7 +315,7 @@ public class ImportWssoDatabaseUserService extends CSVReaderService
     {
         int nMinColumnNumber = CONSTANT_MINIMUM_COLUMNS_PER_LINE;
         Plugin databasePlugin = PluginService.getPlugin( WssoDatabasePlugin.PLUGIN_NAME );
-        List<CSVMessageDescriptor> listMessages = new ArrayList<CSVMessageDescriptor>(  );
+        List<CSVMessageDescriptor> listMessages = new ArrayList<CSVMessageDescriptor>( );
 
         if ( ( strLineDataArray == null ) || ( strLineDataArray.length < nMinColumnNumber ) )
         {
@@ -338,7 +338,7 @@ public class ImportWssoDatabaseUserService extends CSVReaderService
             return listMessages;
         }
 
-        if ( !getUpdateExistingUsers(  ) )
+        if ( !getUpdateExistingUsers( ) )
         {
             String strAccessCode = strLineDataArray[0];
             String strEmail = strLineDataArray[3];
@@ -354,7 +354,7 @@ public class ImportWssoDatabaseUserService extends CSVReaderService
                 Collection<WssoUser> listUsers = WssoUserHome.findWssoUserssByLastNameOrFirtNameOrEmailByProfil( null,
                         null, null, strEmail, databasePlugin );
 
-                if ( ( listUsers != null ) && ( listUsers.size(  ) > 0 ) )
+                if ( ( listUsers != null ) && ( listUsers.size( ) > 0 ) )
                 {
                     String strMessage = I18nService.getLocalizedString( MESSAGE_EMAIL_ALREADY_USED, locale );
                     CSVMessageDescriptor error = new CSVMessageDescriptor( CSVMessageLevel.ERROR, nLineNumber,
@@ -372,9 +372,9 @@ public class ImportWssoDatabaseUserService extends CSVReaderService
      */
     @Override
     protected List<CSVMessageDescriptor> getEndOfProcessMessages( int nNbLineParses, int nNbLinesWithoutErrors,
-        Locale locale )
+            Locale locale )
     {
-        List<CSVMessageDescriptor> listMessages = new ArrayList<CSVMessageDescriptor>(  );
+        List<CSVMessageDescriptor> listMessages = new ArrayList<CSVMessageDescriptor>( );
         Object[] args = { nNbLineParses, nNbLinesWithoutErrors };
         String strMessageContent = I18nService.getLocalizedString( MESSAGE_USERS_IMPORTED, args, locale );
         CSVMessageDescriptor message = new CSVMessageDescriptor( CSVMessageLevel.INFO, 0, strMessageContent );
@@ -397,22 +397,22 @@ public class ImportWssoDatabaseUserService extends CSVReaderService
         String strEmailSubject = I18nService.getLocalizedString( MESSAGE_ACCOUNT_IMPORTED_MAIL_SUBJECT,
                 new String[] { strSiteName }, locale );
         String strBaseURL = strProdUrl;
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_USER, user );
         model.put( MARK_SITE_NAME, strSiteName );
         model.put( MARK_SITE_LINK, MailService.getSiteLink( strBaseURL, true ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MAIL_USER_IMPORTED, locale, model );
 
-        MailService.sendMailHtml( user.getEmail(  ), strSenderEmail, strSenderEmail, strEmailSubject,
-            template.getHtml(  ) );
+        MailService
+                .sendMailHtml( user.getEmail( ), strSenderEmail, strSenderEmail, strEmailSubject, template.getHtml( ) );
     }
 
     /**
      * Get the separator used for attributes of admin users.
      * @return The separator
      */
-    public Character getAttributesSeparator(  )
+    public Character getAttributesSeparator( )
     {
         if ( _strAttributesSeparator == null )
         {
@@ -428,7 +428,7 @@ public class ImportWssoDatabaseUserService extends CSVReaderService
      * @return True if existing users should be updated, false if they should be
      *         ignored.
      */
-    public boolean getUpdateExistingUsers(  )
+    public boolean getUpdateExistingUsers( )
     {
         return _bUpdateExistingUsers;
     }

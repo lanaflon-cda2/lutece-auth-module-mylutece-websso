@@ -55,6 +55,7 @@ import fr.paris.lutece.portal.service.admin.AdminUserService;
 import fr.paris.lutece.portal.service.csv.CSVMessageDescriptor;
 import fr.paris.lutece.portal.service.fileupload.FileUploadService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
+import fr.paris.lutece.portal.service.mail.MailService;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
@@ -89,6 +90,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -156,6 +158,8 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
     private static final String PROPERTY_PAGE_TITLE_CREATE_PROFIL = "module.mylutece.wssodatabase.create_profil.pageTitle";
     private static final String PROPERTY_PAGE_TITLE_MANAGE_PROFILS_USER = "module.mylutece.wssodatabase.manage_profils_user.pageTitle";
     private static final String PROPERTY_IMPORT_USERS_FROM_FILE_PAGETITLE = "module.mylutece.wssodatabase.import_users_from_file.pageTitle";
+    private static final String PROPERTY_NO_REPLY_EMAIL = "mail.noreply.email";
+    private static final String PROPERTY_SITE_NAME = "lutece.name";
 
     //Messages
     private static final String MESSAGE_CONFIRM_REMOVE_USER = "module.mylutece.wssodatabase.message.confirmRemoveUser";
@@ -169,6 +173,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
     private static final String MESSAGE_PROFIL_EXIST = "module.mylutece.wssodatabase.message.profil_exist";
     private static final String MESSAGE_MANDATORY_FIELD = "portal.util.message.mandatoryField";
     private static final String MESSAGE_ERROR_CSV_FILE_IMPORT = "module.mylutece.wssodatabase.import_users_from_file.error_csv_file_import";
+    private static final String MESSAGE_ACCOUNT_IMPORTED_MAIL_SUBJECT = "module.mylutece.wssodatabase.import_users_from_file.email.mailSubject";
 
     // Parameters
     private static final String PARAMETER_PLUGIN_NAME = "plugin_name";
@@ -196,6 +201,8 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
     private static final String PARAMETER_IMPORT_USERS_FILE = "import_file";
     private static final String PARAMETER_SKIP_FIRST_LINE = "ignore_first_line";
     private static final String PARAMETER_UPDATE_USERS = "update_existing_users";
+    private static final String MARK_SITE_NAME = "site_name";
+    private static final String MARK_SITE_LINK = "site_link";
 
     // Marks FreeMarker
     private static final String MARK_ROLES_LIST = "role_list";
@@ -236,6 +243,8 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
     private static final String TEMPLATE_EXPORT_USERS_FROM_FILE = "admin/plugins/mylutece/modules/wssodatabase/export_users.html";
     private static final String TEMPLATE_IMPORT_USERS_FROM_FILE = "admin/plugins/mylutece/modules/wssodatabase/import_users_from_file.html";
     private static final String TEMPLATE_MANAGE_PROFILS_USER = "admin/plugins/mylutece/modules/wssodatabase/manage_profils_user.html";
+    private static final String TEMPLATE_MAIL_USER_IMPORTED = "admin/plugins/mylutece/modules/wssodatabase/mail_user_imported.html";
+
     private static final String FIELD_IMPORT_USERS_FILE = "module.mylutece.wssodatabase.import_users_from_file.labelImportFile";
     private static final String FIELD_XSL_EXPORT = "module.mylutece.wssodatabase.export_users.labelXslt";
     private static final String CONSTANT_WILDCARD = "*";
@@ -308,7 +317,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             }
         }
 
-        HashMap model = new HashMap( );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_USERS_LIST, userList );
         model.put( MARK_PLUGIN_NAME, getPlugin( ).getName( ) );
         model.put( MARK_LAST_NAME, strUserLastName );
@@ -346,7 +355,6 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
      */
     public String doCreateUser( HttpServletRequest request )
     {
-        Collection userList = null;
         WssoUser user = null;
         LdapBrowser ldap = new LdapBrowser( );
 
@@ -357,7 +365,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_ERROR_CREATE_USER, AdminMessage.TYPE_ERROR );
         }
 
-        userList = WssoUserHome.findWssoUsersListForGuid( strUserGuid, getPlugin( ) );
+        Collection userList = WssoUserHome.findWssoUsersListForGuid( strUserGuid, getPlugin( ) );
 
         if ( userList.size( ) == 0 )
         {
@@ -369,6 +377,7 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             }
 
             WssoUserHome.create( user, getPlugin( ) );
+            notifyUserAccountCreated( user, AdminUserService.getLocale( request ), AppPathService.getBaseUrl( request ) );
         }
         else
         {
@@ -569,8 +578,8 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             rightRoles = true;
         }
 
-        Collection userList = WssoUserHome.findWssoUsersList( getPlugin( ) );
-        HashMap model = new HashMap( );
+        Collection<WssoUser> userList = WssoUserHome.findWssoUsersList( getPlugin( ) );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_USERS_LIST, userList );
         model.put( MARK_PLUGIN_NAME, getPlugin( ).getName( ) );
         model.put( MARK_RIGHT_MANAGE_ROLES, rightRoles );
@@ -1494,5 +1503,30 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
         }
 
         return result;
+    }
+
+    /**
+     * Notify a user of the creation of his account and give him his credentials
+     * @param user the user to notify
+     * @param locale The locale
+     * @param strProdUrl The prod URL
+     */
+    private void notifyUserAccountCreated( WssoUser user, Locale locale, String strProdUrl )
+    {
+        String strSenderEmail = AppPropertiesService.getProperty( PROPERTY_NO_REPLY_EMAIL );
+        String strSiteName = AppPropertiesService.getProperty( PROPERTY_SITE_NAME );
+
+        String strEmailSubject = I18nService.getLocalizedString( MESSAGE_ACCOUNT_IMPORTED_MAIL_SUBJECT,
+                new String[] { strSiteName }, locale );
+        String strBaseURL = strProdUrl;
+        Map<String, Object> model = new HashMap<String, Object>( );
+        model.put( MARK_USER, user );
+        model.put( MARK_SITE_NAME, strSiteName );
+        model.put( MARK_SITE_LINK, MailService.getSiteLink( strBaseURL, true ) );
+
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MAIL_USER_IMPORTED, locale, model );
+
+        MailService
+                .sendMailHtml( user.getEmail( ), strSenderEmail, strSenderEmail, strEmailSubject, template.getHtml( ) );
     }
 }
