@@ -578,11 +578,19 @@ public class WssodatabaseJspBean extends PluginAdminPageJspBean
             rightRoles = true;
         }
 
-        Collection<WssoUser> userList = WssoUserHome.findWssoUsersList( getPlugin( ) );
+        String strEmail = StringUtils.defaultString( request.getParameter( MARK_EMAIL ) );
+        String strUserLastName = StringUtils.defaultString( request.getParameter( MARK_LAST_NAME ) );
+        String strUserFirstName = StringUtils.defaultString( request.getParameter( MARK_FIRST_NAME ) );
+
+        Collection<WssoUser> userList = WssoUserHome.findWssoUsersByLastNameOrFirstNameOrEmailByProfil(
+                strUserLastName, strUserFirstName, strEmail, getPlugin( ) );
         Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_USERS_LIST, userList );
         model.put( MARK_PLUGIN_NAME, getPlugin( ).getName( ) );
         model.put( MARK_RIGHT_MANAGE_ROLES, rightRoles );
+        model.put( MARK_EMAIL, strEmail );
+        model.put( MARK_LAST_NAME, strUserLastName );
+        model.put( MARK_FIRST_NAME, strUserFirstName );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_USERS, getLocale( ), model );
 

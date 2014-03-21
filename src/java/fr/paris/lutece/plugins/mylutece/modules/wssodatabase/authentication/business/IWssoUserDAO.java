@@ -131,6 +131,18 @@ public interface IWssoUserDAO
             String strFirstName, String strEmail, Plugin plugin );
 
     /**
+     * Load the list of wssoUsers for a last name or first name and profil
+     * 
+     * @param strLastName The guid of WssoUser
+     * @param strFirstName the first name
+     * @param strEmail the email
+     * @param plugin the current plugin
+     * @return The Collection of the WssoUsers
+     */
+    List<WssoUser> findWssoUsersByLastNameOrFirstNameOrEmailByProfil( String strLastName, String strFirstName,
+            String strEmail, Plugin plugin );
+
+    /**
      * Get the id of the user with this guid
      * 
      * @param strGuid the guid

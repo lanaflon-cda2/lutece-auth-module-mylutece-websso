@@ -169,6 +169,22 @@ public final class WssoUserHome
     }
 
     /**
+     * Load the list of wssoUsers for a last name or first name and profil
+     * 
+     * @param strLastName The guid of WssoUser
+     * @param codeProfil The Plugin using this data access service
+     * @param strFirstName the first name
+     * @param strEmail the email
+     * @param plugin the current plugin
+     * @return The Collection of the WssoUsers
+     */
+    public static List<WssoUser> findWssoUsersByLastNameOrFirstNameOrEmailByProfil( String strLastName,
+            String strFirstName, String strEmail, Plugin plugin )
+    {
+        return _dao.findWssoUsersByLastNameOrFirstNameOrEmailByProfil( strLastName, strFirstName, strEmail, plugin );
+    }
+
+    /**
      * Get a user id from his guid
      * @param strGuid The guid of the user
      * @param plugin The plugin

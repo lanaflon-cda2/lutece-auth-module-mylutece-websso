@@ -36,11 +36,11 @@ package fr.paris.lutece.plugins.mylutece.modules.wssodatabase.authentication.bus
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -61,21 +61,21 @@ public final class WssoUserDAO implements IWssoUserDAO
     private static final String SQL_QUERY_SELECT_WSSO_USER_IDS_WITH_ROLE = "SELECT distinct u.mylutece_wsso_user_id FROM mylutece_wsso_user u, mylutece_wsso_user_role ur WHERE u.mylutece_wsso_user_id = ur.mylutece_wsso_user_id AND ur.role = ?";
 
     /** This class implements the Singleton design pattern. */
-    private static WssoUserDAO _dao = new WssoUserDAO(  );
+    private static WssoUserDAO _dao = new WssoUserDAO( );
 
     /**
      * Creates a new WssoUserDAO object.
      */
-    private WssoUserDAO(  )
+    private WssoUserDAO( )
     {
     }
 
     /**
      * Returns the unique instance of the singleton.
-     *
+     * 
      * @return the instance
      */
-    static WssoUserDAO getInstance(  )
+    static WssoUserDAO getInstance( )
     {
         return _dao;
     }
@@ -88,11 +88,11 @@ public final class WssoUserDAO implements IWssoUserDAO
     public int newPrimaryKey( Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
         int nKey;
 
-        if ( !daoUtil.next(  ) )
+        if ( !daoUtil.next( ) )
         {
             // if the table is empty
             nKey = 1;
@@ -100,14 +100,14 @@ public final class WssoUserDAO implements IWssoUserDAO
 
         nKey = daoUtil.getInt( 1 ) + 1;
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return nKey;
     }
 
     /**
      * Insert a new record in the table.
-     *
+     * 
      * @param wssoUser The wssoUser object
      * @param plugin The Plugin using this data access service
      */
@@ -115,19 +115,19 @@ public final class WssoUserDAO implements IWssoUserDAO
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
         wssoUser.setMyluteceWssoUserId( newPrimaryKey( plugin ) );
-        daoUtil.setInt( 1, wssoUser.getMyluteceWssoUserId(  ) );
-        daoUtil.setString( 2, wssoUser.getGuid(  ) );
-        daoUtil.setString( 3, wssoUser.getLastName(  ) );
-        daoUtil.setString( 4, wssoUser.getFirstName(  ) );
-        daoUtil.setString( 5, wssoUser.getEmail(  ) );
+        daoUtil.setInt( 1, wssoUser.getMyluteceWssoUserId( ) );
+        daoUtil.setString( 2, wssoUser.getGuid( ) );
+        daoUtil.setString( 3, wssoUser.getLastName( ) );
+        daoUtil.setString( 4, wssoUser.getFirstName( ) );
+        daoUtil.setString( 5, wssoUser.getEmail( ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
      * Load the data of WssoUser from the table
-     *
+     * 
      * @param nWssoUserId The identifier of WssoUser
      * @param plugin The Plugin using this data access service
      * @return the instance of the WssoUser
@@ -136,13 +136,13 @@ public final class WssoUserDAO implements IWssoUserDAO
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
         daoUtil.setInt( 1, nWssoUserId );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
         WssoUser wssoUser = null;
 
-        if ( daoUtil.next(  ) )
+        if ( daoUtil.next( ) )
         {
-            wssoUser = new WssoUser(  );
+            wssoUser = new WssoUser( );
             wssoUser.setMyluteceWssoUserId( daoUtil.getInt( 1 ) );
             wssoUser.setGuid( daoUtil.getString( 2 ) );
             wssoUser.setLastName( daoUtil.getString( 3 ) );
@@ -151,7 +151,7 @@ public final class WssoUserDAO implements IWssoUserDAO
             wssoUser.setDateLastLogin( daoUtil.getDate( 6 ) );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return wssoUser;
     }
@@ -164,10 +164,10 @@ public final class WssoUserDAO implements IWssoUserDAO
     public void delete( WssoUser wssoUser, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, wssoUser.getMyluteceWssoUserId(  ) );
+        daoUtil.setInt( 1, wssoUser.getMyluteceWssoUserId( ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
@@ -178,15 +178,15 @@ public final class WssoUserDAO implements IWssoUserDAO
     public void store( WssoUser wssoUser, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-        daoUtil.setInt( 1, wssoUser.getMyluteceWssoUserId(  ) );
-        daoUtil.setString( 2, wssoUser.getGuid(  ) );
-        daoUtil.setString( 3, wssoUser.getLastName(  ) );
-        daoUtil.setString( 4, wssoUser.getFirstName(  ) );
-        daoUtil.setString( 5, wssoUser.getEmail(  ) );
-        daoUtil.setInt( 6, wssoUser.getMyluteceWssoUserId(  ) );
+        daoUtil.setInt( 1, wssoUser.getMyluteceWssoUserId( ) );
+        daoUtil.setString( 2, wssoUser.getGuid( ) );
+        daoUtil.setString( 3, wssoUser.getLastName( ) );
+        daoUtil.setString( 4, wssoUser.getFirstName( ) );
+        daoUtil.setString( 5, wssoUser.getEmail( ) );
+        daoUtil.setInt( 6, wssoUser.getMyluteceWssoUserId( ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        daoUtil.executeUpdate( );
+        daoUtil.free( );
     }
 
     /**
@@ -196,13 +196,13 @@ public final class WssoUserDAO implements IWssoUserDAO
      */
     public Collection<WssoUser> selectWssoUserList( Plugin plugin )
     {
-        Collection<WssoUser> listWssoUsers = new ArrayList<WssoUser>(  );
+        Collection<WssoUser> listWssoUsers = new ArrayList<WssoUser>( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
-            WssoUser wssoUser = new WssoUser(  );
+            WssoUser wssoUser = new WssoUser( );
             wssoUser.setMyluteceWssoUserId( daoUtil.getInt( 1 ) );
             wssoUser.setGuid( daoUtil.getString( 2 ) );
             wssoUser.setLastName( daoUtil.getString( 3 ) );
@@ -213,7 +213,7 @@ public final class WssoUserDAO implements IWssoUserDAO
             listWssoUsers.add( wssoUser );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return listWssoUsers;
     }
@@ -226,14 +226,14 @@ public final class WssoUserDAO implements IWssoUserDAO
      */
     public Collection<WssoUser> selectWssoUsersListForRole( int nIdRole, Plugin plugin )
     {
-        Collection<WssoUser> listWssoUsers = new ArrayList<WssoUser>(  );
+        Collection<WssoUser> listWssoUsers = new ArrayList<WssoUser>( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_FOR_ROLE, plugin );
         daoUtil.setInt( 1, nIdRole );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
-            WssoUser wssoUser = new WssoUser(  );
+            WssoUser wssoUser = new WssoUser( );
             wssoUser.setMyluteceWssoUserId( daoUtil.getInt( 1 ) );
             wssoUser.setGuid( daoUtil.getString( 2 ) );
             wssoUser.setLastName( daoUtil.getString( 3 ) );
@@ -244,14 +244,14 @@ public final class WssoUserDAO implements IWssoUserDAO
             listWssoUsers.add( wssoUser );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return listWssoUsers;
     }
 
     /**
      * Load the list of wssoUser id for a role
-     *
+     * 
      * @param strRole
      *            The role of WssoUser
      * @param plugin
@@ -260,17 +260,17 @@ public final class WssoUserDAO implements IWssoUserDAO
      */
     public List<Integer> selectWssoUserIdsListForRole( String strRole, Plugin plugin )
     {
-        List<Integer> listWssoUserIds = new ArrayList<Integer>(  );
+        List<Integer> listWssoUserIds = new ArrayList<Integer>( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_WSSO_USER_IDS_WITH_ROLE, plugin );
         daoUtil.setString( 1, strRole );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
             listWssoUserIds.add( daoUtil.getInt( 1 ) );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return listWssoUserIds;
     }
@@ -283,14 +283,14 @@ public final class WssoUserDAO implements IWssoUserDAO
      */
     public Collection<WssoUser> selectWssoUserListForGuid( String strGuid, Plugin plugin )
     {
-        Collection<WssoUser> listWssoUsers = new ArrayList<WssoUser>(  );
+        Collection<WssoUser> listWssoUsers = new ArrayList<WssoUser>( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_FOR_GUID, plugin );
         daoUtil.setString( 1, strGuid );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
-            WssoUser wssoUser = new WssoUser(  );
+            WssoUser wssoUser = new WssoUser( );
             wssoUser.setMyluteceWssoUserId( daoUtil.getInt( 1 ) );
             wssoUser.setGuid( daoUtil.getString( 2 ) );
             wssoUser.setLastName( daoUtil.getString( 3 ) );
@@ -301,7 +301,7 @@ public final class WssoUserDAO implements IWssoUserDAO
             listWssoUsers.add( wssoUser );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return listWssoUsers;
     }
@@ -311,17 +311,17 @@ public final class WssoUserDAO implements IWssoUserDAO
      */
     @Override
     public List<WssoUser> findWssoUserssByLastNameOrFirtNameOrEmailByProfil( String codeProfil, String strLastName,
-        String strFirstName, String strEmail, Plugin plugin )
+            String strFirstName, String strEmail, Plugin plugin )
     {
-        List<WssoUser> listWssoUsers = new ArrayList<WssoUser>(  );
+        List<WssoUser> listWssoUsers = new ArrayList<WssoUser>( );
 
-        StringBuffer strSQL = new StringBuffer( 
+        StringBuffer strSQL = new StringBuffer(
                 "SELECT a.mylutece_wsso_user_id, a.guid, a.last_name, a.first_name, a.email, a.date_last_login FROM mylutece_wsso_user a INNER JOIN mylutece_wsso_profil_user b on a.mylutece_wsso_user_id = b.mylutece_wsso_user_id " );
 
         strSQL.append( "WHERE b.mylutece_wsso_profil_code = ? " );
 
-        if ( StringUtils.isNotBlank( strLastName ) || StringUtils.isNotBlank( strFirstName ) ||
-                StringUtils.isNotBlank( strEmail ) )
+        if ( StringUtils.isNotBlank( strLastName ) || StringUtils.isNotBlank( strFirstName )
+                || StringUtils.isNotBlank( strEmail ) )
         {
             if ( StringUtils.isNotBlank( strLastName ) )
             {
@@ -359,12 +359,12 @@ public final class WssoUserDAO implements IWssoUserDAO
             }
         }
 
-        DAOUtil daoUtil = new DAOUtil( strSQL.toString(  ), plugin );
+        DAOUtil daoUtil = new DAOUtil( strSQL.toString( ), plugin );
 
         daoUtil.setString( 1, codeProfil );
 
-        if ( StringUtils.isNotBlank( strLastName ) || StringUtils.isNotBlank( strFirstName ) ||
-                StringUtils.isNotBlank( strEmail ) )
+        if ( StringUtils.isNotBlank( strLastName ) || StringUtils.isNotBlank( strFirstName )
+                || StringUtils.isNotBlank( strEmail ) )
         {
             if ( StringUtils.isNotBlank( strLastName ) )
             {
@@ -402,11 +402,11 @@ public final class WssoUserDAO implements IWssoUserDAO
             }
         }
 
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
-            WssoUser wssoUser = new WssoUser(  );
+            WssoUser wssoUser = new WssoUser( );
             wssoUser.setMyluteceWssoUserId( daoUtil.getInt( 1 ) );
             wssoUser.setGuid( daoUtil.getString( 2 ) );
             wssoUser.setLastName( daoUtil.getString( 3 ) );
@@ -417,7 +417,120 @@ public final class WssoUserDAO implements IWssoUserDAO
             listWssoUsers.add( wssoUser );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
+
+        return listWssoUsers;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<WssoUser> findWssoUsersByLastNameOrFirstNameOrEmailByProfil( String strLastName, String strFirstName,
+            String strEmail, Plugin plugin )
+    {
+        List<WssoUser> listWssoUsers = new ArrayList<WssoUser>( );
+
+        StringBuffer strSQL = new StringBuffer(
+                "SELECT a.mylutece_wsso_user_id, a.guid, a.last_name, a.first_name, a.email, a.date_last_login FROM mylutece_wsso_user a " );
+
+        if ( StringUtils.isNotBlank( strLastName ) || StringUtils.isNotBlank( strFirstName )
+                || StringUtils.isNotBlank( strEmail ) )
+        {
+            strSQL.append( "WHERE " );
+            if ( StringUtils.isNotBlank( strLastName ) )
+            {
+                strSQL.append( "LOWER(a.last_name) LIKE ? " );
+
+                if ( StringUtils.isNotBlank( strFirstName ) )
+                {
+                    strSQL.append( "AND LOWER(a.first_name) LIKE ? " );
+
+                    if ( StringUtils.isNotBlank( strEmail ) )
+                    {
+                        strSQL.append( "AND LOWER(a.email) LIKE ? " );
+                    }
+                }
+                else if ( StringUtils.isNotBlank( strEmail ) )
+                {
+                    strSQL.append( "AND LOWER(a.email) LIKE ? " );
+                }
+            }
+            else
+            {
+                if ( StringUtils.isNotBlank( strFirstName ) )
+                {
+                    strSQL.append( "LOWER(a.first_name) LIKE ? " );
+
+                    if ( StringUtils.isNotBlank( strEmail ) )
+                    {
+                        strSQL.append( "AND LOWER(a.email) LIKE ? " );
+                    }
+                }
+                else if ( StringUtils.isNotBlank( strEmail ) )
+                {
+                    strSQL.append( "LOWER(a.email) LIKE ? " );
+                }
+            }
+        }
+
+        DAOUtil daoUtil = new DAOUtil( strSQL.toString( ), plugin );
+
+        if ( StringUtils.isNotBlank( strLastName ) || StringUtils.isNotBlank( strFirstName )
+                || StringUtils.isNotBlank( strEmail ) )
+        {
+            if ( StringUtils.isNotBlank( strLastName ) )
+            {
+                daoUtil.setString( 1, "%" + strLastName.toLowerCase( ) + "%" );
+
+                if ( StringUtils.isNotBlank( strFirstName ) )
+                {
+                    daoUtil.setString( 2, "%" + strFirstName.toLowerCase( ) + "%" );
+
+                    if ( StringUtils.isNotBlank( strEmail ) )
+                    {
+                        daoUtil.setString( 3, "%" + strEmail.toLowerCase( ) + "%" );
+                    }
+                }
+                else if ( StringUtils.isNotBlank( strEmail ) )
+                {
+                    daoUtil.setString( 2, "%" + strEmail.toLowerCase( ) + "%" );
+                }
+            }
+            else
+            {
+                if ( StringUtils.isNotBlank( strFirstName ) )
+                {
+                    daoUtil.setString( 1, "%" + strFirstName.toLowerCase( ) + "%" );
+
+                    if ( StringUtils.isNotBlank( strEmail ) )
+                    {
+                        daoUtil.setString( 2, "%" + strEmail.toLowerCase( ) + "%" );
+                    }
+                }
+                else if ( StringUtils.isNotBlank( strEmail ) )
+                {
+                    daoUtil.setString( 1, "%" + strEmail.toLowerCase( ) + "%" );
+                }
+            }
+        }
+
+        daoUtil.executeQuery( );
+
+        while ( daoUtil.next( ) )
+        {
+            WssoUser wssoUser = new WssoUser( );
+            wssoUser.setMyluteceWssoUserId( daoUtil.getInt( 1 ) );
+            wssoUser.setGuid( daoUtil.getString( 2 ) );
+            wssoUser.setLastName( daoUtil.getString( 3 ) );
+            wssoUser.setFirstName( daoUtil.getString( 4 ) );
+            wssoUser.setEmail( daoUtil.getString( 5 ) );
+            wssoUser.setDateLastLogin( daoUtil.getDate( 6 ) );
+
+            listWssoUsers.add( wssoUser );
+        }
+
+        daoUtil.free( );
 
         return listWssoUsers;
     }
@@ -432,14 +545,14 @@ public final class WssoUserDAO implements IWssoUserDAO
 
         DAOUtil daoUtil = new DAOUtil( SQL_SELECT_WSSO_USER_ID_FROM_GUID, plugin );
         daoUtil.setString( 1, strGuid );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        if ( daoUtil.next(  ) )
+        if ( daoUtil.next( ) )
         {
             nRecordId = daoUtil.getInt( 1 );
         }
 
-        daoUtil.free(  );
+        daoUtil.free( );
 
         return nRecordId;
     }
